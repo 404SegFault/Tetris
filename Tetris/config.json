@@ -1,0 +1,9 @@
+{
+  "levels": [
+    {
+		"path": "levelempty.txt",
+		"time": 6
+  	}
+  ],
+  "lives": 3
+}

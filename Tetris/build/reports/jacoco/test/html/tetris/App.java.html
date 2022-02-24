@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Demolition</a> &gt; <a href="index.source.html" class="el_package">demolition</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package demolition;
+
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PFont;
+import processing.data.JSONObject;
+
+import java.util.*;
+
+<span class="fc" id="L10">public class App extends PApplet {</span>
+	/////////////////////////////////ATTRIBUTES////////////////////////////////////
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 480;
+    public static final int GRIDSPACE = 32;
+    public static final int FPS = 60;
+
+	private int currentLevel, timeRemaining, frameCount;
+	private boolean gameOver, gameWon, canMove;
+
+	private Gamemap map;
+	private PFont font;
+
+	private JSONObject config;
+	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
+    public void settings() {
+<span class="fc" id="L26">        size(WIDTH, HEIGHT);</span>
+<span class="fc" id="L27">    }</span>
+
+	/**
+	* Given a filename that has animations it would search the resources folder for the appropriate file then increment it by 1 to get the next frame e.g. player_up1 player_up2
+	* @param fileName file name leading to a folder with the sprite's animations e.g. &quot;player/player_up&quot; or &quot;bomb/bomb&quot;  
+	* @return PImage[] Returns the array of all the animations 
+	**/
+	private PImage[] getAnimationCycle(String fileName){
+		//there are 4 frames in an animation cycle for everything except a bomb
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		int framesInCycle = (fileName.equals(&quot;bomb/bomb&quot;) ? 8 : 4);</span>
+<span class="fc" id="L37">		PImage[] frames = new PImage[framesInCycle];</span>
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">		for (int i = 1; i &lt; framesInCycle + 1; i++){</span>
+<span class="fc" id="L40">			frames[i - 1] = this.loadImage(fileName + i + &quot;.png&quot;);</span>
+		}
+
+<span class="fc" id="L43">		return frames;</span>
+	}
+
+	/**
+	* Given the name of a sprite that has animations the method would load all of the sprites directions
+	* @param movingSpriteName the name of the sprite with animations e.g. &quot;player&quot; or &quot;red&quot; for red enemy 
+	* @return PImage[][] Returns a 2d array list with each directional animations
+	**/
+	private PImage[][] getAllAnimations(String movingSpriteName){
+<span class="fc" id="L52">		PImage[][] allAnimations = new PImage[4][4];</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		for (int i = 0; i &lt; Cardinal.values().length; i ++){</span>
+<span class="fc" id="L55">			Cardinal direction = Cardinal.values()[i];</span>
+			
+<span class="fc" id="L57">			allAnimations[i] = this.getAnimationCycle(movingSpriteName + &quot;/&quot; + movingSpriteName + (&quot;_&quot; + direction).toLowerCase()); </span>
+		}
+		
+<span class="fc" id="L60">		return allAnimations;</span>
+	}
+
+	/**Loads the files inside the resources into the application, where it can be used in the game**/
+    public void setup() {
+<span class="fc" id="L65">		HashMap&lt;String, PImage&gt; allSprites = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L66">		LinkedHashMap&lt;String, PImage&gt; allExplosionSprites = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L67">		HashMap&lt;String, PImage[][]&gt; allAnimations = new HashMap&lt;&gt;();</span>
+
+		// paints the background orange
+<span class="fc" id="L70">        frameRate(FPS);</span>
+
+<span class="fc" id="L72">		allSprites.put(&quot;empty&quot; ,loadImage(&quot;empty/empty.png&quot;));</span>
+<span class="fc" id="L73">		allSprites.put(&quot;broken&quot; ,loadImage(&quot;broken/broken.png&quot;));</span>
+<span class="fc" id="L74">		allSprites.put(&quot;wall&quot; ,loadImage(&quot;wall/solid.png&quot;));</span>
+<span class="fc" id="L75">		allSprites.put(&quot;goal&quot; ,loadImage(&quot;goal/goal.png&quot;));</span>
+<span class="fc" id="L76">		allSprites.put(&quot;clock&quot; ,loadImage(&quot;icons/clock.png&quot;));</span>
+<span class="fc" id="L77">		allSprites.put(&quot;playericon&quot; ,loadImage(&quot;icons/player.png&quot;));		</span>
+<span class="fc" id="L78">		allSprites.put(&quot;player&quot;, loadImage(&quot;player/player_down1.png&quot;));</span>
+<span class="fc" id="L79">		allSprites.put(&quot;red&quot;, loadImage(&quot;red/red_down1.png&quot;));</span>
+<span class="fc" id="L80">		allSprites.put(&quot;yellow&quot;, loadImage(&quot;yellow/yellow_down1.png&quot;));</span>
+<span class="fc" id="L81">		allSprites.put(&quot;bomb&quot;, loadImage(&quot;bomb/bomb.png&quot;));</span>
+
+<span class="fc" id="L83">		allAnimations.put(&quot;player&quot;, getAllAnimations(&quot;player&quot;));</span>
+<span class="fc" id="L84">		allAnimations.put(&quot;red&quot;, getAllAnimations(&quot;red&quot;));</span>
+<span class="fc" id="L85">		allAnimations.put(&quot;yellow&quot;, getAllAnimations(&quot;yellow&quot;));</span>
+
+<span class="fc" id="L87">		PImage[][] bombArrayArray = new PImage[][]{getAnimationCycle(&quot;bomb/bomb&quot;)};</span>
+<span class="fc" id="L88">		allAnimations.put(&quot;bomb&quot;, bombArrayArray);</span>
+		// has to be here because the player sprite cannot be loaded inside the constuctor
+
+		//explosion 
+<span class="fc" id="L92">		allExplosionSprites.put(&quot;centre&quot;, loadImage(&quot;explosion/centre.png&quot;));</span>
+<span class="fc" id="L93">		allExplosionSprites.put(&quot;LEFT&quot;, loadImage(&quot;explosion/LEFT.png&quot;));</span>
+<span class="fc" id="L94">		allExplosionSprites.put(&quot;LEFT_END&quot;, loadImage(&quot;explosion/LEFT_END.png&quot;));</span>
+<span class="fc" id="L95">		allExplosionSprites.put(&quot;RIGHT&quot;, loadImage(&quot;explosion/RIGHT.png&quot;));</span>
+<span class="fc" id="L96">		allExplosionSprites.put(&quot;RIGHT_END&quot;, loadImage(&quot;explosion/RIGHT_END.png&quot;));</span>
+<span class="fc" id="L97">		allExplosionSprites.put(&quot;UP&quot;, loadImage(&quot;explosion/UP.png&quot;));</span>
+<span class="fc" id="L98">		allExplosionSprites.put(&quot;UP_END&quot;, loadImage(&quot;explosion/UP_END.png&quot;));</span>
+<span class="fc" id="L99">		allExplosionSprites.put(&quot;DOWN&quot;, loadImage(&quot;explosion/DOWN.png&quot;));</span>
+<span class="fc" id="L100">		allExplosionSprites.put(&quot;DOWN_END&quot;, loadImage(&quot;explosion/DOWN_END.png&quot;));</span>
+
+<span class="fc" id="L102">		config = loadJSONObject(&quot;config.json&quot;);</span>
+<span class="fc" id="L103">		this.map = new Gamemap(allSprites, allAnimations, allExplosionSprites, this, config); </span>
+<span class="fc" id="L104">		map.loadLevel(config);</span>
+<span class="fc" id="L105">		this.timeRemaining = config.getJSONArray(&quot;levels&quot;).getJSONObject(0).getInt(&quot;time&quot;);</span>
+		
+<span class="fc" id="L107">		this.font = createFont(&quot;PressStart2P-Regular.ttf&quot;, 20);</span>
+<span class="fc" id="L108">		this.textFont(this.font);</span>
+<span class="fc" id="L109">		fill(0); //makes the text black</span>
+<span class="fc" id="L110">    }</span>
+	
+	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
+	public void drawUI(){
+<span class="fc" id="L114">		background(239,129,0);</span>
+		// loads the icons
+<span class="fc" id="L116">		this.image(map.getAllSprites().get(&quot;playericon&quot;), WIDTH/2 - GRIDSPACE * 3 - 10, GRIDSPACE/2);</span>
+<span class="fc" id="L117">		this.image(map.getAllSprites().get(&quot;clock&quot;), WIDTH/2 + GRIDSPACE * 2 - 10, GRIDSPACE/2);</span>
+		// loads the UI (magic numbers are there for it to be in the center)
+<span class="fc" id="L119">		this.text(map.getPlayer().getLives(), WIDTH/2 - GRIDSPACE * 2, GRIDSPACE + 12);</span>
+<span class="fc" id="L120">		this.text(this.timeRemaining, WIDTH/2 + GRIDSPACE * 3, GRIDSPACE + 12);</span>
+<span class="fc" id="L121">	}</span>
+
+	/** Decriments the timer every second, moves enemies**/
+	public void tick(){
+<span class="fc" id="L125">		this.frameCount++;</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">		if (frameCount % 60 == 0){</span>
+<span class="fc" id="L127">			this.timeRemaining -= 1;</span>
+			
+<span class="fc bfc" id="L129" title="All 2 branches covered.">			for (int i = 0; i &lt; map.getAllEnemies().size() ;i++){</span>
+<span class="fc" id="L130">				Enemy enemy = map.getAllEnemies().get(i);</span>
+<span class="fc" id="L131">				enemy.movement(map);</span>
+			}
+		}
+
+<span class="fc" id="L135">		map.tick();</span>
+<span class="fc" id="L136">	}</span>
+
+	/** Goes through all the objects and draws them **/
+    public void draw() {
+<span class="fc" id="L140">		this.tick();</span>
+<span class="fc" id="L141">		this.drawUI();</span>
+
+		//---------------------DRAWING THE OBJECTS------------------------
+<span class="fc bfc" id="L144" title="All 2 branches covered.">		for (int i = 0; i &lt; map.getAllObjects().size(); i ++){</span>
+<span class="fc" id="L145">			GameObject gameObject = map.getAllObjects().get(i);</span>
+			// if the object is not an enemy
+<span class="fc bfc" id="L147" title="All 2 branches covered.">			if (!(gameObject instanceof MovingSprite)){</span>
+<span class="fc" id="L148">				gameObject.draw(this);</span>
+			}
+		}
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">		for (int i = 0; i &lt; map.getAllEnemies().size(); i ++){</span>
+<span class="fc" id="L153">			Enemy enemy = map.getAllEnemies().get(i);</span>
+<span class="fc" id="L154">			enemy.draw(this);</span>
+		}
+		
+<span class="fc" id="L157">		map.getPlayer().draw(this);</span>
+
+		//conditions checked will overwrite the objects being drawn
+<span class="pc bpc" id="L160" title="1 of 4 branches missed.">		if (this.timeRemaining &lt;= 0 || map.getPlayer().getLives() == 0){</span>
+<span class="fc" id="L161">			this.displayGameOver();</span>
+<span class="fc" id="L162">			this.gameOver = true;</span>
+		}
+
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">		if (gameWon){</span>
+<span class="nc" id="L166">			this.displayYouWin();</span>
+		}
+<span class="fc" id="L168">    }</span>
+
+	/** detects when a key is pressed and calls the player method for movement **/
+	public void keyPressed(){
+		// player movement and placing bombs are handled
+<span class="nc bnc" id="L173" title="All 2 branches missed.">		if (this.canMove){map.getPlayer().movement(this.key, this.keyCode);}</span>
+<span class="nc" id="L174">		this.canMove = false;</span>
+<span class="nc" id="L175">	}</span>
+	
+<span class="nc" id="L177">	public void keyReleased(){this.canMove = true;}</span>
+
+	/////////////////////////////////GAME SCREENS//////////////////////////////////////
+	public void displayGameOver(){
+<span class="fc" id="L181">		map.getAllObjects().clear();</span>
+<span class="fc" id="L182">		map.getAllEnemies().clear();</span>
+<span class="fc" id="L183">		background(239,129,0);</span>
+<span class="fc" id="L184">		this.text(&quot;GAME OVER&quot;, WIDTH/2 - App.GRIDSPACE * 4 + 16, HEIGHT/2);</span>
+<span class="fc" id="L185">	}</span>
+
+	public void displayYouWin(){
+<span class="nc" id="L188">		background(239,129,0);</span>
+<span class="nc" id="L189">		this.text(&quot;YOU WIN&quot;, WIDTH/2 - App.GRIDSPACE * 3 + 16, HEIGHT/2);</span>
+<span class="nc" id="L190">	}</span>
+
+	/////////////////////////////GETTERS AND SETTERS//////////////////////////////////
+<span class="fc" id="L193">	public Gamemap getMap() {return this.map;}</span>
+
+<span class="nc" id="L195">	public void gameWon() {this.gameWon = true;}</span>
+<span class="fc" id="L196">	public void setTime(int newTime) {this.timeRemaining = newTime;}</span>
+
+<span class="fc" id="L198">	public boolean getGameWon() {return this.gameWon;}</span>
+<span class="fc" id="L199">	public boolean getGameOver() {return this.gameOver;}</span>
+    public static void main(String[] args) {
+<span class="nc" id="L201">        PApplet.main(&quot;demolition.App&quot;);</span>
+<span class="nc" id="L202">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
