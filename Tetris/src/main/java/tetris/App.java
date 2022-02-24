@@ -9,8 +9,8 @@ import java.util.*;
 
 public class App extends PApplet {
 	/////////////////////////////////ATTRIBUTES////////////////////////////////////
-    public static final int WIDTH = 480;
-    public static final int HEIGHT = 480;
+    public static final int WIDTH = 640;
+    public static final int HEIGHT = 640;
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
 
