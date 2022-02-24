@@ -1,1 +1,3 @@
 # Tetris
+### Collaborators:
+- Hruday
