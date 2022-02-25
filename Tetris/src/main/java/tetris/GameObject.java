@@ -5,12 +5,15 @@ import java.util.*;
 public abstract class GameObject {
 	protected PImage sprite;
 	protected int[] coords;
+	protected int x, y;
 	protected boolean beRemoved = false;
 
 	/**is used to create all GameObjects i.e. Flat, Wall, BrokenWall, Enemy and so on**/
 	public GameObject(PImage sprite, int x, int y){
 		this.sprite = sprite;
 		this.coords = new int[]{x, y};
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
@@ -32,6 +35,6 @@ public abstract class GameObject {
 		this.coords[0] = x;
 		this.coords[1] = y;
 	}
-	
+
 	public void setCoord(int[] newCoords){this.coords = newCoords;}
 }

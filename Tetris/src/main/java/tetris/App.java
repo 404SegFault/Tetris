@@ -19,7 +19,11 @@ public class App extends PApplet {
 	private JSONObject config;
 
 	private HashMap<String, PImage> allSprites = new HashMap<>();
-	private ArrayList<GameObject> allObjects = new ArrayList<>();
+	private ArrayList<Block> allBlocks = new ArrayList<>();
+
+	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+
+
 
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
@@ -42,8 +46,7 @@ public class App extends PApplet {
 		config = loadJSONObject("config.json");
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
-		GameObject initialBlock = new Block(allSprites.get("DarkBlue"), 0, 0, "DarkBlue");
-		this.allObjects.add(initialBlock);
+		
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -60,7 +63,17 @@ public class App extends PApplet {
 
 		// if a second passes
 		if (frameCount % 60 == 0){
-			// this.timeRemaining -= 1;
+			// generate random colour
+			Random rand = new Random();
+
+			String colour = this.colours[rand.nextInt(7)];
+
+			Block block = new Block(allSprites.get(colour), 320, 0, colour);
+			this.allBlocks.add(block);
+
+			for (int i = 0; i < this.allBlocks.size(); i++){
+				this.allBlocks.get(i).moveDown();
+			}
 		}
 	}
 
@@ -69,8 +82,8 @@ public class App extends PApplet {
 		this.tick();
 		// this.drawUI();
 
-		for (int i = 0; i < this.allObjects.size(); i++){
-			allObjects.get(i).draw(this);
+		for (int i = 0; i < this.allBlocks.size(); i++){
+			allBlocks.get(i).draw(this);
 		}
 
 		//---------------------DRAWING THE OBJECTS------------------------

@@ -15,4 +15,8 @@ public class Block extends GameObject{
         super(sprite, x, y);
         this.colour = colour;
     }
+
+	public void moveDown(){
+		this.coords[1] += App.GRIDSPACE;
+	}
 }
