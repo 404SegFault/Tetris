@@ -19,7 +19,7 @@ public class App extends PApplet {
 	private JSONObject config;
 
 	private HashMap<String, PImage> allSprites = new HashMap<>();
-	private ArrayList<Block> allBlocks = new ArrayList<>();
+	private ArrayList<Block> allBlocks = new ArrayList<>(); //anything that is put in all blocks gets drawn
 	private DropTimer dropTimer;
 	private int dropMilliseconds = 2000;
 
@@ -47,7 +47,6 @@ public class App extends PApplet {
 		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
 
 		config = loadJSONObject("config.json");
-		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
 		Timer timer = new Timer();
 
