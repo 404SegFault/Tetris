@@ -19,9 +19,6 @@ public class App extends PApplet {
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
-<<<<<<< Updated upstream
-	
-=======
 	private HashMap<String, PImage> allSprites = new HashMap<>();
 	private ArrayList<Block> allBlocks = new ArrayList<>();
 	private DropTimer dropTimer;
@@ -34,7 +31,6 @@ public class App extends PApplet {
 	private Piece piece;
 
 
->>>>>>> Stashed changes
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
         size(WIDTH, HEIGHT);
@@ -46,18 +42,6 @@ public class App extends PApplet {
 		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
-<<<<<<< Updated upstream
-		allSprites.put("darkBlueBlock", "Tiles/tileDarkBlue.png");
-		allSprites.put("greenBlock", "Tiles/tileGreen.png");
-		allSprites.put("lightBlueBlock", "Tiles/tileLightBlue.png");
-		allSprites.put("orangeBlock", "Tiles/tileOrange.png");
-		allSprites.put("purpleBlock", "Tiles/tilePurple.png");
-		allSprites.put("redBlock", "Tiles/tileRed.png");
-		allSprites.put("yellowBlock", "Tiles/tileYellow.png");
-
-		this.allSprites = allSprites;
-		
-=======
 		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
 		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
 		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
@@ -95,7 +79,6 @@ public class App extends PApplet {
 
 		this.allBlocks.add(block);
 
->>>>>>> Stashed changes
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -128,10 +111,6 @@ public class App extends PApplet {
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
-<<<<<<< Updated upstream
-	public void keyPressed(){  
-
-=======
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
@@ -153,7 +132,6 @@ public class App extends PApplet {
 				break;
 
 		}
->>>>>>> Stashed changes
 	}
 	
 	/** changes can move to true so that the player can move again**/
