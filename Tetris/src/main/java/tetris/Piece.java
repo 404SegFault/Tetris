@@ -43,22 +43,22 @@ public class Piece{
         switch(this.blockDir){
             case "down":
                 newBottomX += 32;
-                newBottomY += 32;
+                newBottomY -= 32;
                 this.pieceDir = "right";
 
             case "up":
                 newBottomX -= 32;
-                newBottomY -= 32;
+                newBottomY += 32;
                 this.pieceDir = "left";
 
             case "left":
                 newBottomX += 32;
-                newBottomY -= 32;
+                newBottomY += 32;
                 this.pieceDir = "down";
 
             case "right":
                 newBottomX -= 32;
-                newBottomY += 32;
+                newBottomY -= 32;
                 this.pieceDir = "up";
         }
 
@@ -74,22 +74,22 @@ public class Piece{
         switch(this.blockDir){
             case "down":
                 newBottomX -= 32;
-                newBottomY += 32;
+                newBottomY -= 32;
                 this.pieceDir = "left";
 
             case "up":
                 newBottomX += 32;
-                newBottomY -= 32;
+                newBottomY += 32;
                 this.pieceDir = "right";
 
             case "left":
                 newBottomX += 32;
-                newBottomY += 32;
+                newBottomY -= 32;
                 this.pieceDir = "up";
 
             case "right":
                 newBottomX -= 32;
-                newBottomY -= 32;
+                newBottomY += 32;
                 this.pieceDir = "down";
         }
 
