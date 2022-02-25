@@ -48,10 +48,12 @@ public class App extends PApplet {
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
 		Timer timer = new Timer();
+
+		//the drop timer handles all the blocks falling
 		this.dropTimer = new DropTimer(this);
 		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
-		// BUG FIX LATER PROBABLY VERY BROKEN
 		timer.schedule(dropTimer, 0, dropMilliseconds);
+
 		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
 		this.allBlocks.add(block);
 
@@ -61,34 +63,21 @@ public class App extends PApplet {
     }
 	
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
-	public void drawUI(){
-		background(112, 123, 138);
-	}
-
 	/** Decriments the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
 
 		// if a second passes
 		if (frameCount % 60 == 0){
-			// generate random colour
-			// Random rand = new Random();
 
-			// String colour = this.colours[rand.nextInt(7)];
-
-			// Block block = new Block(allSprites.get(colour), 320, 0, colour);
-			// this.allBlocks.add(block);
 		}
 
-		// for (int i = 0; i < this.allBlocks.size(); i++){
-		// 		this.allBlocks.get(i).moveDown();
-		// 	}
 	}
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.drawUI();
+		this.background(112, 123, 138);
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
@@ -124,3 +113,14 @@ public class App extends PApplet {
 	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
 }
 
+// generate random colour
+// Random rand = new Random();
+
+// String colour = this.colours[rand.nextInt(7)];
+
+// Block block = new Block(allSprites.get(colour), 320, 0, colour);
+// this.allBlocks.add(block);
+
+// for (int i = 0; i < this.allBlocks.size(); i++){
+// 		this.allBlocks.get(i).moveDown();
+// 	}

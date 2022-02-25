@@ -10,6 +10,7 @@ import java.util.*;
 public class Block extends GameObject{
 
     String colour;
+	boolean set = false;
 
     public Block(PImage sprite, int x, int y, String colour){
         super(sprite, x, y);
@@ -17,6 +18,11 @@ public class Block extends GameObject{
     }
 
 	public void moveDown(){
-		this.coords[1] += App.GRIDSPACE;
+		if (set == false){
+			this.coords[1] += App.GRIDSPACE;
+		}
 	}
+
+	public boolean getSet(){return this.set;}
+	public String getColour() {return this.colour;} 
 }
