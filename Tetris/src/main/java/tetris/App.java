@@ -42,20 +42,24 @@ public class App extends PApplet {
 		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
+		allSprites.put("test_sprite", loadImage("Tiles/checkerboard.png"));
+
 		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
 		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
 		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
 		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
 		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
-		// allSprites.put("Red", loadImage("Tiles/tileRed.png"));
+		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
 		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
 
 		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
-		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png"));
+		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png")); 
 		allSprites.put("Blue_Green", loadImage("pills/Blue_Green.png"));
 		allSprites.put("Blue", loadImage("pills/Blue.png"));
 		allSprites.put("Green_Green", loadImage("pills/Green_Green.png"));
 		allSprites.put("Green_Red", loadImage("pills/Green_Red.png"));
+
+		this.allSprites = allSprites;
 
 		String[] pillFiles = new String[]{"Red_Red", "Blue_Blue", "Blue_Green", "Blue", "Green_Green", "Green_Red", "Green", "Red_Blue", "Red_Red", "Red"};
 
@@ -73,7 +77,7 @@ public class App extends PApplet {
 		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
 		timer.schedule(dropTimer, 0, dropMilliseconds);
 
-		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
+		Block block = new Block(allSprites.get("Green_Red"), 320, 0, "DarkBlue");
 
 		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
@@ -115,7 +119,7 @@ public class App extends PApplet {
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.background(112, 123, 138);
+		this.background(this.allSprites.get("test_sprite"));
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);

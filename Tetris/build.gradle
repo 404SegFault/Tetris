@@ -39,5 +39,6 @@ test {
 
 application {
     // Define the main class for the application
-    mainClass = 'tetris.App'
+    //mainClass = 'tetris.App'
+    mainClassName = 'tetris.App' // needed to work on hruday's machine
 }
