@@ -1,10 +1,18 @@
 package tetris;
 
+<<<<<<< Updated upstream
 import java.util.ArrayList;
 import java.util.Random;
+=======
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PFont;
+import processing.data.JSONObject;
+>>>>>>> Stashed changes
 
-public class Piece{
+import java.util.*;
 
+<<<<<<< Updated upstream
     Block topBlock;
     Block bottomBlock;
     String pieceDir;
@@ -19,13 +27,71 @@ public class Piece{
 
         String BlockOneName = colour1 + "Block";
         String BlockTwoName = colour2 + "Block";
+=======
 
-        int topX = 32; //someconstantidk can change
-        int bottomX = topX;
+public class Piece extends GameObject{
 
-        int topY = 32; //someconstantidk can change
-        int bottomY = topY + 32; 
+    public Block topBlock;
+    public Block bottomBlock;
 
+    private int topX,topY,bottomX, bottomY;
+    private String pieceDir;
+
+    public Piece(HashMap<String,PImage> allSprites, PImage sprite, int x, int y, String colour1, String colour2){
+
+        super(sprite,x,y);
+
+        topX = App.GRIDSPACE;
+        bottomX = topX;
+
+        topY = App.GRIDSPACE;
+        bottomY = topY + App.GRIDSPACE; 
+
+
+        this.topBlock = new Block(allSprites.get(colour1), 320, 320, colour1);
+        this.bottomBlock = new Block(allSprites.get(colour2), 320, 320, colour2);
+
+        pieceDir = "down";        
+
+    }
+
+    public void pieceCCWRotation(){
+        //rotates along topblock
+        
+        int newBottomX = this.topBlock.getCoords()[0];
+        int newBottomY = this.topBlock.getCoords()[1];
+
+        switch(pieceDir){
+            case "down":
+                newBottomX += App.GRIDSPACE;
+                newBottomY -= App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                pieceDir = "right";
+                break;
+
+            case "up":
+                newBottomX -= App.GRIDSPACE;
+                newBottomY += App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+                pieceDir = "left";
+                break;
+
+            case "left":
+                newBottomX += App.GRIDSPACE;
+                newBottomY += App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+>>>>>>> Stashed changes
+
+                pieceDir = "down";
+                break;
+
+            case "right":
+                newBottomX -= App.GRIDSPACE;
+                newBottomY -= App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+<<<<<<< Updated upstream
         this.topBlock = new Block(allSprites.get(BlockOneName), topX, topY);
         this.bottomBlock = new Block(allSprites.get(BlockTwoName), bottomX, bottomY);
 
@@ -98,8 +164,66 @@ public class Piece{
 
     
     public void pieceGeneration(){
+=======
+                pieceDir = "up";
+                break;
+        }
+>>>>>>> Stashed changes
 
+        bottomBlock.setCoord(newBottomX, newBottomY);
     }
 
+<<<<<<< Updated upstream
+=======
+    public void pieceCWRotation(){
+        //rotates along topblock
+        
+        int newBottomX = this.topBlock.getCoords()[0];
+        int newBottomY = this.topBlock.getCoords()[1];
+
+        switch(pieceDir){
+            case "down":
+                newBottomX -= App.GRIDSPACE;
+                newBottomY -= App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+                pieceDir = "left";
+                break;
+
+            case "up":
+                newBottomX += App.GRIDSPACE;
+                newBottomY += App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+                pieceDir = "right";
+                break;
+
+            case "left":
+                newBottomX += App.GRIDSPACE;
+                newBottomY -= App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+                pieceDir = "up";
+                break;
+
+            case "right":
+                newBottomX -= App.GRIDSPACE;
+                newBottomY += App.GRIDSPACE;
+                System.out.printf("%d %d\n",newBottomX,newBottomY);
+
+                pieceDir = "down";
+                break;
+
+        }
+
+        bottomBlock.setCoord(newBottomX, newBottomY);
+    }
+
+    
+    // public void pieceGeneration(){
+        
+    // }
+
+>>>>>>> Stashed changes
     
 }

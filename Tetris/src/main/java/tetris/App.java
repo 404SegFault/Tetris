@@ -19,7 +19,22 @@ public class App extends PApplet {
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
+<<<<<<< Updated upstream
 	
+=======
+	private HashMap<String, PImage> allSprites = new HashMap<>();
+	private ArrayList<Block> allBlocks = new ArrayList<>();
+	private DropTimer dropTimer;
+	private int dropMilliseconds = 2000;
+
+	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+
+	private Block moveableBlock;
+
+	private Piece piece;
+
+
+>>>>>>> Stashed changes
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
         size(WIDTH, HEIGHT);
@@ -31,6 +46,7 @@ public class App extends PApplet {
 		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
+<<<<<<< Updated upstream
 		allSprites.put("darkBlueBlock", "Tiles/tileDarkBlue.png");
 		allSprites.put("greenBlock", "Tiles/tileGreen.png");
 		allSprites.put("lightBlueBlock", "Tiles/tileLightBlue.png");
@@ -41,6 +57,45 @@ public class App extends PApplet {
 
 		this.allSprites = allSprites;
 		
+=======
+		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
+		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
+		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
+		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
+		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
+		// allSprites.put("Red", loadImage("Tiles/tileRed.png"));
+		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
+
+		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
+		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png"));
+		allSprites.put("Blue_Green", loadImage("pills/Blue_Green.png"));
+		allSprites.put("Blue", loadImage("pills/Blue.png"));
+		allSprites.put("Green_Green", loadImage("pills/Green_Green.png"));
+		allSprites.put("Green_Red", loadImage("pills/Green_Red.png"));
+
+		String[] pillFiles = new String[]{"Red_Red", "Blue_Blue", "Blue_Green", "Blue", "Green_Green", "Green_Red", "Green", "Red_Blue", "Red_Red", "Red"};
+
+		for (int i = 0; i <  pillFiles.size(); i++){
+			allSprites.put(pillFiles, loadImage("pills/" + pillFiles + ".png"));
+		}
+
+		config = loadJSONObject("config.json");
+		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
+		
+		Timer timer = new Timer();
+
+		//the drop timer handles all the blocks falling
+		this.dropTimer = new DropTimer(this);
+		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
+		timer.schedule(dropTimer, 0, dropMilliseconds);
+
+		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
+
+		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
+
+		this.allBlocks.add(block);
+
+>>>>>>> Stashed changes
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -68,12 +123,37 @@ public class App extends PApplet {
 		this.tick();
 		this.drawUI();
 
+		this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
+<<<<<<< Updated upstream
 	public void keyPressed(){  
 
+=======
+	public void keyPressed(){
+		switch (keyCode){
+			case PApplet.LEFT:
+				moveableBlock.moveLeft();
+				break;
+			case PApplet.RIGHT:
+				moveableBlock.moveRight();
+				break;
+			case PApplet.DOWN:
+				moveableBlock.moveDown();
+				break;
+
+
+			case 88:
+				piece.pieceCWRotation();
+				break;
+			case 90:
+				piece.pieceCCWRotation();
+				break;
+
+		}
+>>>>>>> Stashed changes
 	}
 	
 	/** changes can move to true so that the player can move again**/
