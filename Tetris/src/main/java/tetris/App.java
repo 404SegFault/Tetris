@@ -97,14 +97,31 @@ public class App extends PApplet {
 
 		// if a second passes
 		if (frameCount % 60 == 0){
-			// this.timeRemaining -= 1;
+
 		}
+
+		// FIXME THIS IS SO FUCKING BAD, IT SHOULDNT HAVE TO CHECK EVERY TICK BUT IDK WHERE ELSE
+		// goes through all the blocks
+		for (int i = 0; i < this.allBlocks.size(); i++){
+
+			// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
+			if (this.allBlocks.get(i).getSet() == false){
+				this.moveableBlock = this.allBlocks.get(i);
+			}
+		}
+
 	}
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.drawUI();
+		this.background(112, 123, 138);
+
+		for (int i = 0; i < this.allBlocks.size(); i++){
+			allBlocks.get(i).draw(this);
+		}
+
+
 
 		this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
