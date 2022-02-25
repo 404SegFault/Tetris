@@ -32,5 +32,6 @@ public abstract class GameObject {
 		this.coords[0] = x;
 		this.coords[1] = y;
 	}
+	
 	public void setCoord(int[] newCoords){this.coords = newCoords;}
 }

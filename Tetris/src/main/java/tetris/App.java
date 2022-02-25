@@ -19,7 +19,8 @@ public class App extends PApplet {
 	private JSONObject config;
 
 	private HashMap<String, PImage> allSprites = new HashMap<>();
-	
+	private ArrayList<GameObject> allObjects = new ArrayList<>();
+
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
         size(WIDTH, HEIGHT);
@@ -33,7 +34,7 @@ public class App extends PApplet {
 		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
 		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
 		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
-		allSprites.put("Orange", loadImage("Tiles/Orange.png"));
+		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
 		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
 		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
 		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
@@ -41,7 +42,7 @@ public class App extends PApplet {
 		config = loadJSONObject("config.json");
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
-		// GameObject initialBlock = GameObject(allSprites.get("DarkBlue"), )
+		GameObject initialBlock = new Block(allSprites.get("DarkBlue"), 0, 0, "DarkBlue");
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -65,9 +66,11 @@ public class App extends PApplet {
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.drawUI();
+		// this.drawUI();
 
-
+		for (int i = 0; i < this.allObjects.size(); i++){
+			allObjects.get(i).draw(this);
+		}
 
 		//---------------------DRAWING THE OBJECTS------------------------
 		
