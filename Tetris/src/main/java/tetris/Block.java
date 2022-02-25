@@ -1,4 +1,11 @@
 package tetris;
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.core.PFont;
+import processing.data.JSONObject;
+
+import java.util.*;
+
 
 public class Block extends GameObject{
 

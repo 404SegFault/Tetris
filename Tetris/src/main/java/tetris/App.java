@@ -18,6 +18,7 @@ public class App extends PApplet {
 
 	private JSONObject config;
 
+	private HashMap<String, PImage> allSprites = new HashMap<>();
 	
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
@@ -26,18 +27,21 @@ public class App extends PApplet {
 
 	/**Loads the files inside the resources into the application, where it can be used in the game**/
     public void setup() {
-		HashMap<String, PImage> allSprites = new HashMap<>();
 
         frameRate(FPS);
 
-		allSprites.put("darkBlueBlock", "Tiles/tileDarkBlue.png");
-		allSprites.put("greenBlock", "Tiles/tileGreen.png");
-		allSprites.put("lightBlueBlock", "Tiles/tileLightBlue.png");
-		allSprites.put("orangeBlock", "Tiles/tileOrange.png");
-		allSprites.put("purpleBlock", "Tiles/tilePurple.png");
-		allSprites.put("redBlock", "Tiles/tileRed.png");
-		allSprites.put("yellowBlock", "Tiles/tileYellow.png");
+		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
+		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
+		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
+		allSprites.put("Orange", loadImage("Tiles/Orange.png"));
+		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
+		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
+		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
+
+		config = loadJSONObject("config.json");
+		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
+		// GameObject initialBlock = GameObject(allSprites.get("DarkBlue"), )
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -46,7 +50,6 @@ public class App extends PApplet {
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
 		background(112, 123, 138);
-
 	}
 
 	/** Decriments the timer every second, moves enemies**/
@@ -64,18 +67,17 @@ public class App extends PApplet {
 		this.tick();
 		this.drawUI();
 
+
+
 		//---------------------DRAWING THE OBJECTS------------------------
+		
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
-	public void keyPressed(){  
-
-	}
+	public void keyPressed(){}
 	
 	/** changes can move to true so that the player can move again**/
-	public void keyReleased(){ 
-
-	}
+	public void keyReleased(){}
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
 	public void displayGameOver(){

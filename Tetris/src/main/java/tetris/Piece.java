@@ -18,11 +18,9 @@ public class Piece{
         int topY = 32; //someconstantidk can change
         int bottomY = topY + 32; 
 
-        this.topBlock = new Block(allSprites.get(BlockOneName), topX, topY);
-        this.bottomBlock = new Block(allSprites.get(BlockTwoName), bottomX, bottomY);
+        // this.topBlock = new Block(allSprites.get(BlockOneName), topX, topY);
+        // this.bottomBlock = new Block(allSprites.get(BlockTwoName), bottomX, bottomY);
 
     }
-
-    public void 
 
 }
