@@ -43,6 +43,7 @@ public class App extends PApplet {
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
 		GameObject initialBlock = new Block(allSprites.get("DarkBlue"), 0, 0, "DarkBlue");
+		this.allObjects.add(initialBlock);
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
