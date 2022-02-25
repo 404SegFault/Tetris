@@ -7,13 +7,14 @@ import processing.data.JSONObject;
 
 import java.util.*;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 public class App extends PApplet {
 	/////////////////////////////////ATTRIBUTES////////////////////////////////////
     public static final int WIDTH = 640;
     public static final int HEIGHT = 640;
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
-
 	private PFont font;
 
 	private JSONObject config;
@@ -103,14 +104,21 @@ public class App extends PApplet {
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
-				moveableBlock.moveLeft();
-				break;
+				if (moveableBlock.getXCoord() > 0){
+					moveableBlock.moveLeft();
+				}break;
+				
 			case PApplet.RIGHT:
-				moveableBlock.moveRight();
-				break;
+				if (moveableBlock.getXCoord() < 608){
+					moveableBlock.moveRight();
+				}break;
+
 			case PApplet.DOWN:
+			if (moveableBlock.getYCoord() < 608){
 				moveableBlock.moveDown();
-				break;
+			
+			}break;
+				
 		}
 	}
 	
