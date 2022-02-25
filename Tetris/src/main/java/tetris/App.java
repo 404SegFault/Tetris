@@ -15,7 +15,8 @@ public class App extends PApplet {
     public static final int FPS = 60;
 
 	private PFont font;
-
+	private HashMap<String, PImage> allSprites;
+	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
 	
@@ -27,7 +28,7 @@ public class App extends PApplet {
 	/**Loads the files inside the resources into the application, where it can be used in the game**/
     public void setup() {
 		HashMap<String, PImage> allSprites = new HashMap<>();
-
+		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
 		allSprites.put("darkBlueBlock", "Tiles/tileDarkBlue.png");
@@ -37,6 +38,8 @@ public class App extends PApplet {
 		allSprites.put("purpleBlock", "Tiles/tilePurple.png");
 		allSprites.put("redBlock", "Tiles/tileRed.png");
 		allSprites.put("yellowBlock", "Tiles/tileYellow.png");
+
+		this.allSprites = allSprites;
 		
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
@@ -46,6 +49,7 @@ public class App extends PApplet {
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
 		background(112, 123, 138);
+		for(GameObject gameObject : this.allObjects){ gameObject.draw(this); }
 
 	}
 
