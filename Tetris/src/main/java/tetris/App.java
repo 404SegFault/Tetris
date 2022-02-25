@@ -20,9 +20,10 @@ public class App extends PApplet {
 
 	private HashMap<String, PImage> allSprites = new HashMap<>();
 	private ArrayList<Block> allBlocks = new ArrayList<>();
+	private DropTimer dropTimer;
+	private int dropMilliseconds = 2000;
 
 	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
-
 
 
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
@@ -46,7 +47,14 @@ public class App extends PApplet {
 		config = loadJSONObject("config.json");
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
-		
+		Timer timer = new Timer();
+		this.dropTimer = new DropTimer(this);
+		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
+		// BUG FIX LATER PROBABLY VERY BROKEN
+		timer.schedule(dropTimer, 0, dropMilliseconds);
+		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
+		this.allBlocks.add(block);
+
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
@@ -64,23 +72,23 @@ public class App extends PApplet {
 		// if a second passes
 		if (frameCount % 60 == 0){
 			// generate random colour
-			Random rand = new Random();
+			// Random rand = new Random();
 
-			String colour = this.colours[rand.nextInt(7)];
+			// String colour = this.colours[rand.nextInt(7)];
 
-			Block block = new Block(allSprites.get(colour), 320, 0, colour);
-			this.allBlocks.add(block);
-
-			for (int i = 0; i < this.allBlocks.size(); i++){
-				this.allBlocks.get(i).moveDown();
-			}
+			// Block block = new Block(allSprites.get(colour), 320, 0, colour);
+			// this.allBlocks.add(block);
 		}
+
+		// for (int i = 0; i < this.allBlocks.size(); i++){
+		// 		this.allBlocks.get(i).moveDown();
+		// 	}
 	}
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		// this.drawUI();
+		this.drawUI();
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
@@ -112,5 +120,7 @@ public class App extends PApplet {
     public static void main(String[] args) {
         PApplet.main("tetris.App");
     }
+
+	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
 }
 

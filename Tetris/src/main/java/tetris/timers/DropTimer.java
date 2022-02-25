@@ -2,11 +2,18 @@ package tetris;
 import java.util.*;
 
 class DropTimer extends TimerTask{
-	private GameObject block;
-	public DropTimer(GameObject block){
-		this.block = block;
+
+	App app;
+	public DropTimer(App app) {
+		this.app = app;
 	}
 
-	/**every 0.2 seconds the next frame method within animation timer is called**/
-	public void run(){block.toString();} //can be block.drop to move it down
+	/** every certain number of seconds this method is called**/
+	public void run(){
+		ArrayList<Block> allBlocks = app.getAllBlocks();
+
+		for (int i = 0; i < allBlocks.size(); i++){
+			allBlocks.get(i).moveDown();
+		}
+	} 
 }
