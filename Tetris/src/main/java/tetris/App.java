@@ -30,13 +30,13 @@ public class App extends PApplet {
 
         frameRate(FPS);
 
-		// allSprites.put("empty" ,loadImage("empty/empty.png"));
-		// allSprites.put("broken" ,loadImage("broken/broken.png"));
-		// allSprites.put("wall" ,loadImage("wall/solid.png"));
-		// allSprites.put("goal" ,loadImage("goal/goal.png"));
-
-		config = loadJSONObject("config.json");
-		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
+		allSprites.put("darkBlueBlock", "Tiles/tileDarkBlue.png");
+		allSprites.put("greenBlock", "Tiles/tileGreen.png");
+		allSprites.put("lightBlueBlock", "Tiles/tileLightBlue.png");
+		allSprites.put("orangeBlock", "Tiles/tileOrange.png");
+		allSprites.put("purpleBlock", "Tiles/tilePurple.png");
+		allSprites.put("redBlock", "Tiles/tileRed.png");
+		allSprites.put("yellowBlock", "Tiles/tileYellow.png");
 		
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
@@ -46,6 +46,7 @@ public class App extends PApplet {
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
 		background(112, 123, 138);
+
 	}
 
 	/** Decriments the timer every second, moves enemies**/
@@ -67,10 +68,14 @@ public class App extends PApplet {
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
-	public void keyPressed(){}
+	public void keyPressed(){  
+
+	}
 	
 	/** changes can move to true so that the player can move again**/
-	public void keyReleased(){}
+	public void keyReleased(){ 
+
+	}
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
 	public void displayGameOver(){
