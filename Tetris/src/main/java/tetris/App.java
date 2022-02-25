@@ -25,6 +25,8 @@ public class App extends PApplet {
 
 	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
 
+	
+	private Block moveableBlock;
 
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
@@ -72,6 +74,16 @@ public class App extends PApplet {
 
 		}
 
+		// FIXME THIS IS SO FUCKING BAD, IT SHOULDNT HAVE TO CHECK EVERY TICK BUT IDK WHERE ELSE
+		// goes through all the blocks
+		for (int i = 0; i < this.allBlocks.size(); i++){
+
+			// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
+			if (this.allBlocks.get(i).getSet() == false){
+				this.moveableBlock = this.allBlocks.get(i);
+			}
+		}
+
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -88,7 +100,19 @@ public class App extends PApplet {
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
-	public void keyPressed(){}
+	public void keyPressed(){
+		switch (keyCode){
+			case PApplet.LEFT:
+				moveableBlock.moveLeft();
+				break;
+			case PApplet.RIGHT:
+				moveableBlock.moveRight();
+				break;
+			case PApplet.DOWN:
+				moveableBlock.moveDown();
+				break;
+		}
+	}
 	
 	/** changes can move to true so that the player can move again**/
 	public void keyReleased(){}
