@@ -97,19 +97,14 @@ public class App extends PApplet {
 		// goes through all the blocks 
 		for(Block b : allBlocks){
 
-			// checks all blocks that have the same x coordinate, should find
-			if(b.getXCoord() == moveableBlock.getXCoord()){
-				// if it matches then keep reducing the block until it doesnt match anymore
-				
-				if (b.getYCoord() > lowestY && b.getSet()){
-					highestBlock = b;
-					System.out.println(highestBlock.toString());
-				}
+			// checks all blocks that have the same x coordinate, and is higher than the lowest block?
+			if(b.getXCoord() == moveableBlock.getXCoord() && b.getYCoord() > lowestY && b.getSet()){
+				highestBlock = b;
 			}
 			
 		}
 
-
+		// if it couldnt find a block that fits then the block should teleport straight to the bottom
 		if (highestBlock == null){
 			moveableBlock.setCoord(moveableBlock.getXCoord(), BOTTOM);
 			System.out.println("no blocks below this one");
@@ -147,13 +142,20 @@ public class App extends PApplet {
 	}
 
 	private void generateNewMoveable(){
+		//sets the current block
 		moveableBlock.setBlock();
+
+		// randomly chooses a colour
 		Random rand = new Random();
 		String colour = colours[rand.nextInt(7)];
 
+		// gets a new block based on the colour
 		Block block = new Block(allSprites.get(colour), 320, 64, colour);
-		this.moveableBlock = block;
-		this.allBlocks.add(block);
+		System.out.println(block.toString());
+		moveableBlock = block;
+		System.out.println(block.toString());
+		
+		allBlocks.add(block);
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -164,6 +166,7 @@ public class App extends PApplet {
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
 		}
+
 
 		// this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
@@ -193,7 +196,8 @@ public class App extends PApplet {
 				hardDrop();
 		}
 
-		if (blockSideCollision(newCoords) == false){
+		// if it doesnt collide with any blocks then it can go into that position
+		if (blockSideCollision(newCoords) == false && keyCode != ' '){
 			this.moveableBlock.setCoord(newCoords);
 		}
 	}
