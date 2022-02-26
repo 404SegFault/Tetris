@@ -12,11 +12,6 @@ class DropTimer extends TimerTask{
 	public void run(){
 		ArrayList<Block> allBlocks = app.getAllBlocks();
 
-		for (int i = 0; i < allBlocks.size(); i++){
-			
-			if (allBlocks.get(i).getSet() == false){
-				allBlocks.get(i).moveDown();
-			}
-		}
+		app.getMoveableBlock().moveDown();
 	} 
 }
