@@ -16,11 +16,10 @@ public class App extends PApplet {
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
 	private PFont font;
-	private HashMap<String, PImage> allSprites;
+	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
-	// private HashMap<String, PImage> allSprites = new HashMap<>();
 	private ArrayList<Block> allBlocks = new ArrayList<>();
 	private DropTimer dropTimer;
 	private int dropMilliseconds = 2000;
@@ -39,8 +38,6 @@ public class App extends PApplet {
 
 	/**Loads the files inside the resources into the application, where it can be used in the game**/
     public void setup() {
-		HashMap<String, PImage> allSprites = new HashMap<>();
-		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
 		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
@@ -48,7 +45,7 @@ public class App extends PApplet {
 		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
 		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
 		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
-		// allSprites.put("Red", loadImage("Tiles/tileRed.png"));
+		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
 		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
 
 		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
@@ -101,16 +98,6 @@ public class App extends PApplet {
 
 		}
 
-		// FIXME THIS IS SO FUCKING BAD, IT SHOULDNT HAVE TO CHECK EVERY TICK BUT IDK WHERE ELSE
-		// goes through all the blocks
-		// for (int i = 0; i < this.allBlocks.size(); i++){
-
-		// 	// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
-		// 	if (this.allBlocks.get(i).getSet() == false){
-		// 		this.moveableBlock = this.allBlocks.get(i);
-		// 	}
-		// }
-
 		if (moveableBlock.getYCoord() >= 608){
 			moveableBlock.setBlock();
 			Random rand = new Random();
@@ -141,12 +128,12 @@ public class App extends PApplet {
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
-				if (moveableBlock.getXCoord() >= 0){
+				if (moveableBlock.getXCoord() > 0){
 					moveableBlock.moveLeft();
 				}break;
 				
 			case PApplet.RIGHT:
-				if (moveableBlock.getXCoord() <= 640){
+				if (moveableBlock.getXCoord() < 608){
 					moveableBlock.moveRight();
 				}break;
 
@@ -166,7 +153,6 @@ public class App extends PApplet {
 	
 	/** changes can move to true so that the player can move again**/
 	public void keyReleased(){ 
-		;
 	}
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
