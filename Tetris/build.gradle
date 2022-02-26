@@ -42,11 +42,6 @@ application {
     mainClassName = 'tetris.App' // needed to work on hruday's machine
 }
 
-launch4j{
-    outfile = 'TetrisMario.exe'
-    mainClassName = 'tetris.App'
-}
-
 sourceSets.main.java.srcDirs = ['src']
 mainClassName = 'tetris.App'
 

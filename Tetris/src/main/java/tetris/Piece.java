@@ -119,16 +119,14 @@ public class Piece extends GameObject{
                 this.rightHalf.moveDown();
         }
     }
-    // red green
-    // rand.generator(0:2)
-    // array("red", "green" , "blue")
-    // string color1+color2 (redgreen)
-    // sprite 
-    // Piece (sprite, coloru 1 , color 2)
+    
+    public Block getLeftHalf(){ return this.leftHalf; }
 
-    public void pieceGeneration(){
-        
+    public Block getRightHalf() { return this.rightHalf; }
+
+    public Block[] getBothHalves() { 
+        Block[] blockList = new Block[]{ this.rightHalf, this.leftHalf };
+        return blockList;
     }
-
     
 }
