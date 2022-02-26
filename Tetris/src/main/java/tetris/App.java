@@ -36,7 +36,6 @@ public class App extends PApplet {
 
 	private Piece piece;
 
-
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
         size(WIDTH, HEIGHT);
@@ -141,7 +140,7 @@ public class App extends PApplet {
 	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
-		
+
 		if (moveableBlock.getYCoord() >= 608 || blockStacked()){
 			generateNewMoveable();
 		}
