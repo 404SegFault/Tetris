@@ -17,6 +17,7 @@ public class App extends PApplet {
     public static final int FPS = 60;
 	private PFont font;
 	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
+	private ArrayList<Block> stackedBlocks = new ArrayList<>();
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
@@ -88,8 +89,25 @@ public class App extends PApplet {
 		for(GameObject gameObject : this.allObjects){ gameObject.draw(this); }
 
 	}
+	// method to check if blocks are stacked on each other (on top)
+	public boolean blocksStacked(){
+		for(Block b : allBlocks){
+			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
+				moveableBlock.setBlock();
+				Random rand = new Random();
+				String colour = colours[rand.nextInt(7)];
 
-	/** Decriments the timer every second, moves enemies**/
+				Block block = new Block(allSprites.get(colour), 320, 0, colour);
+				this.moveableBlock = block;
+				this.allBlocks.add(block);
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
+	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
 
@@ -106,6 +124,7 @@ public class App extends PApplet {
 			Block block = new Block(allSprites.get(colour), 320, 0, colour);
 			this.moveableBlock = block;
 			this.allBlocks.add(block);
+
 		}
 	}
 
@@ -118,6 +137,10 @@ public class App extends PApplet {
 			allBlocks.get(i).draw(this);
 		}
 
+		// for(int i = 0; i < this.stackedBlocks.size(); i++){
+		// 	stackedBlocks.get(i).draw(this);
+		// }
+
 
 
 		this.piece.draw(this);
@@ -128,20 +151,21 @@ public class App extends PApplet {
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
-				if (moveableBlock.getXCoord() > 0){
+				if (moveableBlock.getXCoord() > 0 && !blocksStacked()){
 					moveableBlock.moveLeft();
 				}break;
 				
 			case PApplet.RIGHT:
-				if (moveableBlock.getXCoord() < 608){
+				if (moveableBlock.getXCoord() < 608 && !blocksStacked()){
 					moveableBlock.moveRight();
 				}break;
 
 			case PApplet.DOWN:
-				moveableBlock.moveDown();
-				break;
-
-
+				if (!blocksStacked()){
+					moveableBlock.moveDown();
+					break;
+				}
+				
 			case 88:
 				piece.pieceCWRotation();
 				break;
