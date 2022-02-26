@@ -106,7 +106,7 @@ public class App extends PApplet {
 	public void hardDrop(){
 
 		Block highestBlock = null;
-		int highestY = 700; //no block can ever be lower than so you want this value to be replaces as soon as possible
+		int highestY = 640; //no block can ever be lower than so you want this value to be replaces as soon as possible
 
 		// goes through all the blocks 
 		for(Block b : allBlocks){
@@ -114,7 +114,7 @@ public class App extends PApplet {
 			// checks all blocks that have the same x coordinate, and is higher than the current highest block
 			if(b.getXCoord() == moveableBlock.getXCoord() && b.getSet() && b.getYCoord() < highestY){
 				highestBlock = b;
-				System.out.println(b.toString());
+				highestY = b.getYCoord();
 			}
 			
 		}
@@ -122,11 +122,9 @@ public class App extends PApplet {
 		// if it couldnt find a block that fits then the block should teleport straight to the bottom
 		if (highestBlock == null){
 			moveableBlock.setCoord(moveableBlock.getXCoord(), BOTTOM);
-			System.out.println("no blocks below this one");
 		}
 		else {
 			moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
-			System.out.println("blocks below");
 		}
 
 		generateNewMoveable();
