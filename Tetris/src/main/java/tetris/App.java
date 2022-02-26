@@ -228,6 +228,42 @@ public class App extends PApplet {
 		this.text("YOU WIN", WIDTH/2 - App.GRIDSPACE * 3 + 16, HEIGHT/2);
 	}
 
+	public void loadLevel(JSONObject config){
+		//App.GRIDSPACE * 2 offset from where the game map actually starts
+		loadMap(levelFilePath);
+
+		int cursorY = App.GRIDSPACE * 2;
+		int cursorX = 0;
+
+		//--------------------------------LOADING THE SPRITES FROM THE MAP------------------------------------
+		
+		char[][] backgroundMap = this.backmap;
+
+		for (char[] row : backgroundMap){
+			for (char symbol: row){
+				GameObject newObject = null;
+				// paints the image of the ground if its empty
+				if (symbol == ' '){
+					newObject = new Flat(this.allSprites.get("empty"), cursorX, cursorY);
+				} 
+				// creates a new wall at the coordinates where the wall will be drawn on later
+				if (symbol == 'W') {
+					newObject = new Wall(this.allSprites.get("wall"), cursorX, cursorY);
+				}
+				if (symbol == 'G'){
+					newObject = new Flat(this.allSprites.get("goal"), cursorX, cursorY);
+					this.goalCoordinates = new int[]{cursorX, cursorY};
+				}
+
+				//moves to the next position of where the sprite should spawn 
+				allObjects.add(newObject);
+				cursorX += App.GRIDSPACE;
+			}
+			cursorX = 0;
+			cursorY += App.GRIDSPACE;
+		}
+	}
+
 	/////////////////////////////GETTERS AND SETTERS//////////////////////////////////
 
     public static void main(String[] args) {
