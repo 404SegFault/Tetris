@@ -15,9 +15,14 @@ public class App extends PApplet {
     public static final int HEIGHT = 640;
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
+
+	public static final int TOP = 64;
+	public static final int LEFT = 160;
+	public static final int RIGHT = 448;
+	public static final int BOTTOM = 544;
+
 	private PFont font;
 	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
-	private ArrayList<Block> stackedBlocks = new ArrayList<>();
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
@@ -44,6 +49,7 @@ public class App extends PApplet {
 		for (String colour : this.colours){
 			allSprites.put(colour, loadImage("Tiles/tile" + colour + ".png"));
 		}
+		allSprites.put("test_sprite", loadImage("Tiles/checkerboard.png"));
 
 		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
 		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png"));
@@ -68,7 +74,7 @@ public class App extends PApplet {
 		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
 		timer.schedule(dropTimer, 0, dropMilliseconds);
 
-		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
+		Block block = new Block(allSprites.get("DarkBlue"), 320, 64, "DarkBlue");
 		this.moveableBlock = block;
 		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
@@ -86,31 +92,35 @@ public class App extends PApplet {
 
 	}
 	// method to check if blocks are stacked on each other (on top)
-	public boolean blockStacked(){
+	public void blockStacked(){
+
+		Block highestBlock = null;
+		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
 
 		// goes through all the blocks 
 		for(Block b : allBlocks){
 
-			// checks if the block is stacked above it and that the 
-			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
-				// if it matches 
-				return true;
+			// checks all blocks that have the same x coordinate, should find
+			if(b.getXCoord() == moveableBlock.getXCoord()){
+				// if it matches then keep reducing the block until it doesnt match anymore
+				
+				if (b.getYCoord() > lowestY){
+					highestBlock = b;
+				}
 			}
 			
 		}
-		return false;
+
+	
+		moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
 	}
 
 	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
 
-		// if a second passes
-		if (frameCount % 60 == 0){
-
-		}
-
-		if (moveableBlock.getYCoord() >= 608 || blockStacked()){
+		// if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
+		if (moveableBlock.getYCoord() >= BOTTOM ){
 			generateNewMoveable();
 		}
 	}
@@ -120,7 +130,7 @@ public class App extends PApplet {
 		Random rand = new Random();
 		String colour = colours[rand.nextInt(7)];
 
-		Block block = new Block(allSprites.get(colour), 320, 0, colour);
+		Block block = new Block(allSprites.get(colour), 320, 64, colour);
 		this.moveableBlock = block;
 		this.allBlocks.add(block);
 	}
@@ -128,13 +138,13 @@ public class App extends PApplet {
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.background(112, 123, 138);
+		this.background(loadImage("Tiles/checkerboard.png"));
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
 		}
 
-		this.piece.draw(this);
+		// this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
     }
 
@@ -158,12 +168,8 @@ public class App extends PApplet {
 				newCoords[1] += App.GRIDSPACE;
 				break;
 
-        // case 88:
-			// 	piece.pieceCWRotation();
-			// 	break;
-			// case 90:
-			// 	piece.pieceCCWRotation();
-			// 	break;
+			case ' ':
+				newCoords[1] = BOTTOM;
 		}
 
 		if (blockSideCollision(newCoords) == false){
@@ -174,7 +180,7 @@ public class App extends PApplet {
 	public boolean blockSideCollision(int[] coords){
 		for (Block block : allBlocks){
 
-			if (Arrays.equals(coords, block.getCoords())){
+			if (Arrays.equals(coords, block.getCoords()) || coords[0] == RIGHT || coords[0] == LEFT){
 				return true;
 			}
 		}
