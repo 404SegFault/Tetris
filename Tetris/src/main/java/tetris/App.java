@@ -6,6 +6,7 @@ import processing.core.PFont;
 import processing.data.JSONObject;
 
 import java.util.*;
+import java.io.*;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
 
@@ -71,6 +72,8 @@ public class App extends PApplet {
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
 		Timer timer = new Timer();
+
+		loadLevel("level1.txt");
 
 		//the drop timer handles all the blocks falling
 		this.dropTimer = new DropTimer(this);
@@ -234,7 +237,7 @@ public class App extends PApplet {
 
 	public void loadLevel(String filepath){
 		//App.GRIDSPACE * 2 offset from where the game map actually starts
-		map = new char[HEIGHT][WIDTH];
+		char[][] map = new char[HEIGHT][WIDTH];
 		try {
 			// -------------------------LOADING THE MAIN MAP--------------------------
 			File f = new File(filepath);
@@ -265,13 +268,13 @@ public class App extends PApplet {
 
 				// spawns the appropriate sprite based on the symbol
 				if (symbol == 'R'){
-					virus = new Block(this.allSprites.get("Red_Virus"), cursorX, cursorY);
+					virus = new Block(this.allSprites.get("Red_virus"), cursorX, cursorY, "Red");
 				} 
 				if (symbol == 'B'){
-					virus = new Block(this.allSprites.get("Blue_Virus"), cursorX, cursorY);
+					virus = new Block(this.allSprites.get("Blue_virus"), cursorX, cursorY, "Blue");
 				} 
 				if (symbol == 'G'){
-					virus = new Block(this.allSprites.get("Green_Virus"), cursorX, cursorY);
+					virus = new Block(this.allSprites.get("Green_virus"), cursorX, cursorY, "Green");
 				} 
 
 				//adds the virus to the drawing list and moves to the next position of where the sprite should spawn 
