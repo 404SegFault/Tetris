@@ -35,7 +35,8 @@ public class App extends PApplet {
 	private DropTimer dropTimer;
 	private int dropMilliseconds = 2000;
 
-	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+	//private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+	private String[] colours = new String[]{"Blue","Green","Red"};
 
 	private Piece moveablePiece;
 	private Block virus;
@@ -75,11 +76,6 @@ public class App extends PApplet {
 
 		loadLevel("level1.txt");
 
-		//the drop timer handles all the blocks falling
-		this.dropTimer = new DropTimer(this);
-		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
-		timer.schedule(dropTimer, 0, dropMilliseconds);
-
 		// this.virus = new Block(allSprites.get("Green_virus"), 320, 64, "Green");
 		// this.allBlocks.add(virus);
 
@@ -92,6 +88,11 @@ public class App extends PApplet {
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
+
+		//the drop timer handles all the blocks falling
+		this.dropTimer = new DropTimer(this);
+		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
+		timer.schedule(dropTimer, 0, dropMilliseconds);
     }
 	
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
@@ -104,28 +105,35 @@ public class App extends PApplet {
 		Block highestBlock = null;
 		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
 
-		// goes through all the blocks 
-		for(Block b : allBlocks){
+		// goes through all the blocks
+		for(Block pillHalf : moveablePiece.getBothHalves()){ 
+			highestBlock = null;
+			ArrayList<Block> sameXBlocks = new ArrayList<>();
 
-			// checks all blocks that have the same x coordinate, and is higher than the lowest block?
-			for(Block pillHalf : moveablePiece.getBothHalves()){
-				if(b.getXCoord() == pillHalf.getXCoord() && b.getYCoord() > lowestY && b.getSet()){
-					highestBlock = b;
+			for(Block b : allBlocks){
+				if(b.getXCoord() == pillHalf.getXCoord() && pillHalf.getYCoord() < b.getYCoord()){ sameXBlocks.add(b); }
+			}
+
+			if(sameXBlocks.size() != 0){
+				highestBlock = sameXBlocks.get(0);
+				for(Block b : sameXBlocks){
+					if(b.getYCoord() < highestBlock.getYCoord()){ highestBlock = b; }
 				}
 			}
 			
-		}
-
-		// if it couldnt find a block that fits then the block should teleport straight to the bottom
-		for(Block pillHalf : moveablePiece.getBothHalves()){
+			// if it couldnt find a block that fits then the block should teleport straight to the bottom
+	
 			if (highestBlock == null){
+				
 				pillHalf.setCoord(pillHalf.getXCoord(), BOTTOM);
 				System.out.println("no blocks below this one");
 			}
 			else {
+				System.out.printf("%d, %d\n", pillHalf.getXCoord(), pillHalf.getYCoord());
 				pillHalf.setCoord(pillHalf.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
 				System.out.println("blocks below");
 			}
+			allBlocks.add(pillHalf);
 		}
 
 		generateNewMoveable();
@@ -150,8 +158,9 @@ public class App extends PApplet {
 	public void tick(){
 		this.frameCount++;
 
-		if (moveablePiece.getYCoord() >= BOTTOM || blockStacked()){
-			generateNewMoveable();
+		if (moveablePiece.checkVirusUnder(allBlocks) == true){
+			hardDrop();
+			//Insert pattern checkcode here
 		}
 	}
 
@@ -165,10 +174,11 @@ public class App extends PApplet {
 		
 		// randomly chooses a colour
 		Random rand = new Random();
-		String colour = colours[rand.nextInt(7)];
+		String colour1 = colours[rand.nextInt(3)];
+		String colour2 = colours[rand.nextInt(3)];
 
 		// gets a new block based on the colour
-		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, "Blue", "Green");
+		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, colour1, colour2);
 		moveablePiece = newPiece;
 		
 	}
@@ -193,40 +203,32 @@ public class App extends PApplet {
 
 		// before it is allowed to move to the open space it needs to check all of the coordinates in the space where it wants to go
 		// if there is a preexisting block in the new position it wont let it go there
-		for(Block pillHalf : moveablePiece.getBothHalves()){
-			int[] newCoords = pillHalf.getCoords().clone();
 
-			switch (keyCode){
-				case PApplet.LEFT:
-					moveablePiece.pieceLeftMove();
-					break;
-				
-				case PApplet.RIGHT:
-					moveablePiece.pieceRightMove();
-					break;
+		switch (keyCode){
+			case PApplet.LEFT:
+				moveablePiece.pieceLeftMove(allBlocks);
+				break;
+			
+			case PApplet.RIGHT:
+				moveablePiece.pieceRightMove(allBlocks);
+				break;
 
-				case PApplet.DOWN:
-					moveablePiece.pieceDownMove();
-					break;
-				
-				case 88: //x for Clockwise	
-					System.out.println("clockwise");	
-					moveablePiece.pieceCWRotation();
-					break;
+			case PApplet.DOWN:
+				moveablePiece.pieceDownMove();
+				break;
+			
+			case 88: //x for Clockwise	
+				System.out.println("clockwise");	
+				moveablePiece.pieceCWRotation();
+				break;
 
-				case 90: //z for AntiClockwise
-					System.out.println("anticlockwise");
-					moveablePiece.pieceCCWRotation();
-					break;
+			case 90: //z for AntiClockwise
+				System.out.println("anticlockwise");
+				moveablePiece.pieceCCWRotation();
+				break;
 
-				case ' ':
-					hardDrop();
-			}
-
-			// if it doesnt collide with any blocks then it can go into that position
-			if (blockSideCollision(newCoords) == false && keyCode != ' '){
-				pillHalf.setCoord(newCoords);
-			}
+			case ' ':
+				hardDrop();
 		}
 	}
 

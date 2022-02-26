@@ -99,15 +99,29 @@ public class Piece extends GameObject{
         
     }
 
-    public void pieceLeftMove(){
-        if (this.leftHalf.getXCoord() > 0 && this.rightHalf.getXCoord() > 0 ){
+    public void pieceLeftMove(ArrayList<Block> allBlocks){
+
+        for(Block pillHalf : this.getBothHalves()){
+            for(Block b : allBlocks){
+                if(b.getXCoord() == pillHalf.getXCoord() - 32 && b.getYCoord() == pillHalf.getYCoord()){ return; }
+            }
+        }
+
+        if (this.leftHalf.getXCoord() > 192 && this.rightHalf.getXCoord() >= this.leftHalf.getXCoord() ){
                 this.leftHalf.moveLeft();
                 this.rightHalf.moveLeft();
         }
     }
 
-    public void pieceRightMove(){
-        if (this.rightHalf.getXCoord() < 608 && this.leftHalf.getXCoord() < 608){
+    public void pieceRightMove(ArrayList<Block> allBlocks){
+
+        for(Block pillHalf : this.getBothHalves()){
+            for(Block b : allBlocks){
+                if(b.getXCoord() == pillHalf.getXCoord() + 32 && b.getYCoord() == pillHalf.getYCoord()){ return; }
+            }
+        }
+
+        if (this.rightHalf.getXCoord() < 416 && this.leftHalf.getXCoord() <= this.rightHalf.getXCoord()){
                 this.leftHalf.moveRight();
                 this.rightHalf.moveRight();
         }
@@ -119,13 +133,29 @@ public class Piece extends GameObject{
                 this.rightHalf.moveDown();
         }
     }
+
+    public boolean checkVirusUnder(ArrayList<Block> allBlocks){
+        for(Block pillHalf : this.getBothHalves()){
+            for(Block b : allBlocks){
+                if(b.getXCoord() == pillHalf.getXCoord() && b.getYCoord() == pillHalf.getYCoord() + 32){ return true; }
+            }
+        }
+        return false;
+
+    }
     
     public Block getLeftHalf(){ return this.leftHalf; }
 
     public Block getRightHalf() { return this.rightHalf; }
 
     public Block[] getBothHalves() { 
-        Block[] blockList = new Block[]{ this.rightHalf, this.leftHalf };
+        Block[] blockList = new Block[]{ this.leftHalf, this.rightHalf };
+
+        if(this.rightHalf.getCoords()[1] > this.leftHalf.getCoords()[1]){
+            blockList[0] = this.rightHalf;
+            blockList[1] = this.leftHalf;
+        }
+
         return blockList;
     }
     
