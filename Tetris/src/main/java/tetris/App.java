@@ -76,7 +76,7 @@ public class App extends PApplet {
 		timer.schedule(dropTimer, 0, dropMilliseconds);
 
 		Block block = new Block(allSprites.get("Green_Red"), 320, 0, "DarkBlue");
-
+		this.moveableBlock = block;
 		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		this.allBlocks.add(block);
