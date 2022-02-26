@@ -17,6 +17,7 @@ public class App extends PApplet {
     public static final int FPS = 60;
 	private PFont font;
 	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
+	private ArrayList<Block> stackedBlocks = new ArrayList<>();
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
@@ -84,8 +85,23 @@ public class App extends PApplet {
 		for(GameObject gameObject : this.allObjects){ gameObject.draw(this); }
 
 	}
+	// method to check if blocks are stacked on each other (on top)
+	public boolean blockStacked(){
 
-	/** Decriments the timer every second, moves enemies**/
+		// goes through all the blocks 
+		for(Block b : allBlocks){
+
+			// checks if the block is stacked above it and that the 
+			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
+				// if it matches 
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
+	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
 
@@ -94,15 +110,19 @@ public class App extends PApplet {
 
 		}
 
-		if (moveableBlock.getYCoord() >= 608){
-			moveableBlock.setBlock();
-			Random rand = new Random();
-			String colour = colours[rand.nextInt(7)];
-
-			Block block = new Block(allSprites.get(colour), 320, 0, colour);
-			this.moveableBlock = block;
-			this.allBlocks.add(block);
+		if (moveableBlock.getYCoord() >= 608 || blockStacked()){
+			generateNewMoveable();
 		}
+	}
+
+	private void generateNewMoveable(){
+		moveableBlock.setBlock();
+		Random rand = new Random();
+		String colour = colours[rand.nextInt(7)];
+
+		Block block = new Block(allSprites.get(colour), 320, 0, colour);
+		this.moveableBlock = block;
+		this.allBlocks.add(block);
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -114,37 +134,52 @@ public class App extends PApplet {
 			allBlocks.get(i).draw(this);
 		}
 
-
-
 		this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
 	public void keyPressed(){
+
+		// before it is allowed to move to the open space it needs to check all of the coordinates in the space where it wants to go
+		// if there is a preexisting block in the new position it wont let it go there
+		int[] newCoords = this.moveableBlock.getCoords().clone();
+
 		switch (keyCode){
 			case PApplet.LEFT:
-				if (moveableBlock.getXCoord() > 0){
-					moveableBlock.moveLeft();
-				}break;
+				newCoords[0] -= App.GRIDSPACE;
+				break;
 				
 			case PApplet.RIGHT:
-				if (moveableBlock.getXCoord() < 608){
-					moveableBlock.moveRight();
-				}break;
-
-			case PApplet.DOWN:
-				moveableBlock.moveDown();
+				newCoords[0] += App.GRIDSPACE;
 				break;
 
+			case PApplet.DOWN:
+				newCoords[1] += App.GRIDSPACE;
+				break;
 
-			// case 88:
+        // case 88:
 			// 	piece.pieceCWRotation();
 			// 	break;
 			// case 90:
 			// 	piece.pieceCCWRotation();
 			// 	break;
 		}
+
+		if (blockSideCollision(newCoords) == false){
+			this.moveableBlock.setCoord(newCoords);
+		}
+	}
+
+	public boolean blockSideCollision(int[] coords){
+		for (Block block : allBlocks){
+
+			if (Arrays.equals(coords, block.getCoords())){
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	/** changes can move to true so that the player can move again**/
@@ -169,5 +204,7 @@ public class App extends PApplet {
     }
 
 	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
+
+	public Block getMoveableBlock(){return this.moveableBlock;}
 }
 

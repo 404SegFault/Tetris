@@ -30,5 +30,4 @@ public class Block extends GameObject{
 	public void setBlock(){this.set = true;}
 	public String getColour() {return this.colour;}
 
-	
 }
