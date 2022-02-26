@@ -141,7 +141,7 @@ public class App extends PApplet {
 	public void tick(){
 		this.frameCount++;
 
-		if (moveableBlock.getYCoord() >= 608 || blockStacked()){
+		if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
 			generateNewMoveable();
 		}
 	}
