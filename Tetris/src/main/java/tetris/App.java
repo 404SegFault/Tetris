@@ -160,7 +160,7 @@ public class App extends PApplet {
 
 		if (moveablePiece.checkVirusUnder(allBlocks) == true){
 			hardDrop();
-			//Insert pattern checking code here
+			//Insert pattern checking code here 
 		}
 	}
 
