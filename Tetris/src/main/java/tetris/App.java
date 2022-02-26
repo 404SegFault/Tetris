@@ -88,11 +88,9 @@ public class App extends PApplet {
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
 		background(112, 123, 138);
-		for(GameObject gameObject : this.allObjects){ gameObject.draw(this); }
-
 	}
 	// method to check if blocks are stacked on each other (on top)
-	public void blockStacked(){
+	public void hardDrop(){
 
 		Block highestBlock = null;
 		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
@@ -104,15 +102,25 @@ public class App extends PApplet {
 			if(b.getXCoord() == moveableBlock.getXCoord()){
 				// if it matches then keep reducing the block until it doesnt match anymore
 				
-				if (b.getYCoord() > lowestY){
+				if (b.getYCoord() > lowestY && b.getSet()){
 					highestBlock = b;
+					System.out.println(highestBlock.toString());
 				}
 			}
 			
 		}
 
-	
-		moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+
+		if (highestBlock == null){
+			moveableBlock.setCoord(moveableBlock.getXCoord(), BOTTOM);
+			System.out.println("no blocks below this one");
+		}
+		else {
+			moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+			System.out.println("blocks below");
+		}
+
+		generateNewMoveable();
 	}
 
 	/** Decrements the timer every second, moves enemies**/
@@ -169,7 +177,7 @@ public class App extends PApplet {
 				break;
 
 			case ' ':
-				newCoords[1] = BOTTOM;
+				hardDrop();
 		}
 
 		if (blockSideCollision(newCoords) == false){

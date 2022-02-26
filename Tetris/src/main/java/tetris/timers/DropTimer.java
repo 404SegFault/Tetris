@@ -10,8 +10,6 @@ class DropTimer extends TimerTask{
 
 	/** every certain number of seconds this method is called**/
 	public void run(){
-		ArrayList<Block> allBlocks = app.getAllBlocks();
-
 		app.getMoveableBlock().moveDown();
 	} 
 }
