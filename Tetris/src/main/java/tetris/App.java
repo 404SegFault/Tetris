@@ -26,9 +26,12 @@ public class App extends PApplet {
 
 	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
 
-	private Block moveableBlock;
+	private Piece newPill; //For testing purposes
 
-	private Piece piece;
+	// private Block moveableBlock;
+	// private Block notMoveBlock; //This is for testing
+
+	//private Piece piece;
 
 
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
@@ -42,20 +45,39 @@ public class App extends PApplet {
 
 		allSprites.put("test_sprite", loadImage("Tiles/checkerboard.png"));
 
-		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
-		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
-		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
-		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
-		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
-		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
-		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
+		// allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
+		// allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
+		// allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
+		// allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
+		// allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
+		// allSprites.put("Red", loadImage("Tiles/tileRed.png"));
+		// allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
 
 		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
 		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png")); 
-		allSprites.put("Blue_Green", loadImage("pills/Blue_Green.png"));
-		allSprites.put("Blue", loadImage("pills/Blue.png"));
 		allSprites.put("Green_Green", loadImage("pills/Green_Green.png"));
+
+		allSprites.put("Blue_Green", loadImage("pills/Blue_Green.png"));
 		allSprites.put("Green_Red", loadImage("pills/Green_Red.png"));
+		allSprites.put("Red_Blue", loadImage("pills/Red_Blue.png"));
+
+		allSprites.put("Blue", loadImage("pills/Blue.png"));
+		allSprites.put("Red", loadImage("pills/Red.png"));
+		allSprites.put("Green", loadImage("pills/Green.png"));
+
+		/*
+		FUllpill color = color1 + "_" + color2;
+		if(in array) => get sprite and generate piece
+		color = color2 + "_"+ color1; => get sprite and generate
+
+		drop, set
+		once set x and y for both halfs, halfPill object for both halves
+
+		B
+		G B
+
+		*/
+	
 
 		this.allSprites = allSprites;
 
@@ -75,11 +97,21 @@ public class App extends PApplet {
 		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
 		timer.schedule(dropTimer, 0, dropMilliseconds);
 
-		Block block = new Block(allSprites.get("Green_Red"), 320, 0, "DarkBlue");
+		this.newPill = new Piece(allSprites, allSprites.get("Blue_Green"), 64, 32, "Blue", "Green");
 
-		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
+		// Block newBlock = new Block(allSprites.get("Red"), 320, 32, "Red");
+		// Block newBlock2 = new Block(allSprites.get("Blue"), 288, 32, "Red");
+		// this.notMoveBlock = newBlock2;
+		// this.notMoveBlock.setBlock();
 
-		this.allBlocks.add(block);
+		// this.notMoveBlock.doRotate(-2);
+
+		// this.moveableBlock = newBlock;
+		// this.moveableBlock.setBlock();
+		// //this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
+
+		// this.allBlocks.add(newBlock);
+		// this.allBlocks.add(newBlock2);
 
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
@@ -99,18 +131,18 @@ public class App extends PApplet {
 
 		// if a second passes
 		if (frameCount % 60 == 0){
-
+			
 		}
 
-		if (moveableBlock.getYCoord() >= 608){
-			moveableBlock.setBlock();
-			Random rand = new Random();
-			String colour = colours[rand.nextInt(7)];
+		// if (moveableBlock.getYCoord() >= 608){
+		// 	moveableBlock.setBlock();
+		// 	Random rand = new Random();
+		// 	String colour = colours[rand.nextInt(7)];
 
-			Block block = new Block(allSprites.get(colour), 320, 0, colour);
-			this.moveableBlock = block;
-			this.allBlocks.add(block);
-		}
+		// 	Block block = new Block(allSprites.get(colour), 320+16, 0, colour);
+		// 	this.moveableBlock = block;
+		// 	this.allBlocks.add(block);
+		// }
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -121,37 +153,36 @@ public class App extends PApplet {
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
 		}
+		newPill.draw(this);
 
-
-
-		this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
     }
 
 	/** detects when a key is pressed and calls the player method for movement **/
 	public void keyPressed(){
+		//System.out.println(keyCode);
 		switch (keyCode){
 			case PApplet.LEFT:
-				if (moveableBlock.getXCoord() > 0){
-					moveableBlock.moveLeft();
-				}break;
+				newPill.pieceLeftMove();
+				break;
 				
 			case PApplet.RIGHT:
-				if (moveableBlock.getXCoord() < 608){
-					moveableBlock.moveRight();
-				}break;
-
-			case PApplet.DOWN:
-				moveableBlock.moveDown();
+				newPill.pieceRightMove();
 				break;
 
+			case PApplet.DOWN:
+				newPill.pieceDownMove();
+				break;
+			
+			case 88: //x for Clockwise	
+				System.out.println("clockwise");	
+				newPill.pieceCWRotation();
+				break;
 
-			// case 88:
-			// 	piece.pieceCWRotation();
-			// 	break;
-			// case 90:
-			// 	piece.pieceCCWRotation();
-			// 	break;
+			case 90: //z for AntiClockwise
+				System.out.println("anticlockwise");
+				newPill.pieceCCWRotation();
+				break;
 		}
 	}
 	

@@ -7,123 +7,121 @@ import processing.data.JSONObject;
 
 import java.util.*;
 
+//New Name: FullPill
+//Purpose: Movement (left and right), Rotation, setting the piece in place, once set creates individual half pill objects to be stored for "further stacking, cleaning once 4 in row, dropping if other half is cleared"
 
 public class Piece extends GameObject{
 
-    public Block topBlock;
-    public Block bottomBlock;
+    public Block leftHalf;
+    public Block rightHalf;
 
     private int topX,topY,bottomX, bottomY;
-    private String pieceDir;
+    private int pieceDir;
 
+    // private String direction[4] = {"Right", "Down","Left","Up"};
+
+
+    /*
+    red green
+    
+    object fullPill (sprite , x ,y , red , green){
+        constructor
+
+        super(sprite, x, y);
+
+        halfPill half1 = new halfPill(sprite, x, y, color1);
+        halfPill half2 = new halfPill(sprite, x, y, color2);
+
+
+
+    };
+
+    fullPill.rotation( dorotate , ccwRotation);
+    movement();
+
+
+    */
+    
     public Piece(HashMap<String,PImage> allSprites, PImage sprite, int x, int y, String colour1, String colour2){
 
         super(sprite,x,y);
 
-        topX = App.GRIDSPACE;
-        bottomX = topX;
+        this.leftHalf = new Block(allSprites.get(colour1), x-App.GRIDSPACE, y, colour1);
+        this.leftHalf.doRotate(2);
+        this.rightHalf = new Block(allSprites.get(colour2), x, y, colour2);
 
-        topY = App.GRIDSPACE;
-        bottomY = topY + App.GRIDSPACE; 
+        pieceDir = 0;
 
-
-        this.topBlock = new Block(allSprites.get(colour1), 320, 320, colour1);
-        this.bottomBlock = new Block(allSprites.get(colour2), 320, 320, colour2);
-
-        pieceDir = "down";        
+        //topLeftCorner = [min(block1X, block2X), min()
 
     }
+    
 
-    public void pieceCCWRotation(){
-        //rotates along topblock
-        
-        int newBottomX = this.topBlock.getCoords()[0];
-        int newBottomY = this.topBlock.getCoords()[1];
-
-        switch(pieceDir){
-            case "down":
-                newBottomX += App.GRIDSPACE;
-                newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-                pieceDir = "right";
-                break;
-
-            case "up":
-                newBottomX -= App.GRIDSPACE;
-                newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "left";
-                break;
-
-            case "left":
-                newBottomX += App.GRIDSPACE;
-                newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "down";
-                break;
-
-            case "right":
-                newBottomX -= App.GRIDSPACE;
-                newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "up";
-                break;
-        }
-
-        bottomBlock.setCoord(newBottomX, newBottomY);
+    public void draw(App app){
+        leftHalf.draw(app);
+        rightHalf.draw(app);
     }
 
     public void pieceCWRotation(){
-        //rotates along topblock
-        
-        int newBottomX = this.topBlock.getCoords()[0];
-        int newBottomY = this.topBlock.getCoords()[1];
+        // if(Math.min(rightHalf.getXCoord(),leftHalf.getXCoord()) + App.GRIDSPACE <= 608 && pieceDir != 3){
+        //     if(Math.max(rightHalf.getXCoord(),leftHalf.getXCoord()) - App.GRIDSPACE >= 0 && pieceDir != 1){
+        //         this.rightHalf.blockCWRotation();
+        //         this.leftHalf.doRotate(1);
+        //         pieceDir  = (pieceDir + 1) %4;
+        //     }
+        // }else if(){
+            
+        // }
 
-        switch(pieceDir){
-            case "down":
-                newBottomX -= App.GRIDSPACE;
-                newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+        boolean validTurn = this.leftHalf.blockCWRotation();
 
-                pieceDir = "left";
-                break;
-
-            case "up":
-                newBottomX += App.GRIDSPACE;
-                newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "right";
-                break;
-
-            case "left":
-                newBottomX += App.GRIDSPACE;
-                newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "up";
-                break;
-
-            case "right":
-                newBottomX -= App.GRIDSPACE;
-                newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
-
-                pieceDir = "down";
-                break;
-
-        }
-
-        bottomBlock.setCoord(newBottomX, newBottomY);
+        if(validTurn == true){ this.rightHalf.doRotate(1); }
     }
 
-    
-    // public void pieceGeneration(){
+    public void pieceCCWRotation(){
+        // if(Math.min(rightHalf.getXCoord(),leftHalf.getXCoord()) + App.GRIDSPACE <= 608 && pieceDir != 1){
+        //     if(Math.max(rightHalf.getXCoord(),leftHalf.getXCoord()) - App.GRIDSPACE >= 0 && pieceDir != 3){
+        //         
+        //         pieceDir  = (pieceDir + 1) %4;
+
+        //     }
+        // }
+
+        boolean validTurn = this.rightHalf.blockCCWRotation();
+        if(validTurn == true){ this.leftHalf.doRotate(-1); }
         
-    // }
+    }
+
+    public void pieceLeftMove(){
+        if (this.leftHalf.getXCoord() > 0 && this.rightHalf.getXCoord() > 0 ){
+                this.leftHalf.moveLeft();
+                this.rightHalf.moveLeft();
+        }
+    }
+
+    public void pieceRightMove(){
+        if (this.rightHalf.getXCoord() < 608 && this.leftHalf.getXCoord() < 608){
+                this.leftHalf.moveRight();
+                this.rightHalf.moveRight();
+        }
+    }
+
+    public void pieceDownMove(){
+        if (this.rightHalf.getYCoord() < 544 && this.leftHalf.getYCoord() < 544){
+                this.leftHalf.moveDown();
+                this.rightHalf.moveDown();
+        }
+    }
+    // red green
+    // rand.generator(0:2)
+    // array("red", "green" , "blue")
+    // string color1+color2 (redgreen)
+    // sprite 
+    // Piece (sprite, coloru 1 , color 2)
+
+    public void pieceGeneration(){
+        
+    }
 
     
 }
