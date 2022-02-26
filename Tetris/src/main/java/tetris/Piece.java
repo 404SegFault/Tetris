@@ -73,9 +73,12 @@ public class Piece extends GameObject{
             
         // }
 
-        boolean validTurn = this.leftHalf.blockCWRotation();
+        System.out.printf("Old: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
 
+        boolean validTurn = this.leftHalf.blockCWRotation();
         if(validTurn == true){ this.rightHalf.doRotate(1); }
+
+        System.out.printf("After CW: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
     }
 
     public void pieceCCWRotation(){
@@ -87,8 +90,12 @@ public class Piece extends GameObject{
         //     }
         // }
 
+        System.out.printf("Old: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
+
         boolean validTurn = this.rightHalf.blockCCWRotation();
         if(validTurn == true){ this.leftHalf.doRotate(-1); }
+
+        System.out.printf("After CCW: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
         
     }
 

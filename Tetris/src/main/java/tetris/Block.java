@@ -69,20 +69,20 @@ public class Block extends GameObject{
         int newBottomX = this.getCoords()[0];
         int newBottomY = this.getCoords()[1];
         int newDegrees = this.rotDegrees;
-
+        
         switch(this.rotDegrees){
             case 90:
                 newBottomX += App.GRIDSPACE;
                 newBottomY -= App.GRIDSPACE;
 
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
                 newDegrees = 0;
                 break;
 
             case 270:
                 newBottomX -= App.GRIDSPACE;
                 newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 180;
                 break;
@@ -90,7 +90,7 @@ public class Block extends GameObject{
             case 180:
                 newBottomX += App.GRIDSPACE;
                 newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 90;
                 break;
@@ -98,7 +98,7 @@ public class Block extends GameObject{
             case 0:
                 newBottomX -= App.GRIDSPACE;
                 newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 270;
                 break;
@@ -125,7 +125,7 @@ public class Block extends GameObject{
             case 90:
                 newBottomX -= App.GRIDSPACE;
                 newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 180;
                 break;
@@ -133,7 +133,7 @@ public class Block extends GameObject{
             case 270:
                 newBottomX += App.GRIDSPACE;
                 newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 0;
                 break;
@@ -141,7 +141,7 @@ public class Block extends GameObject{
             case 180:
                 newBottomX += App.GRIDSPACE;
                 newBottomY -= App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 270;
                 break;
@@ -149,7 +149,7 @@ public class Block extends GameObject{
             case 0:
                 newBottomX -= App.GRIDSPACE;
                 newBottomY += App.GRIDSPACE;
-                System.out.printf("%d %d\n",newBottomX,newBottomY);
+                //System.out.printf("%d %d\n",newBottomX,newBottomY);
 
                 newDegrees = 90;
                 break;
@@ -172,7 +172,10 @@ public class Block extends GameObject{
         return true;
     }
 
-    public void doRotate(int direction){ this.rotDegrees = (this.rotDegrees + direction * 90) % 360; }
+    public void doRotate(int direction){ 
+        this.rotDegrees = (rotDegrees + direction * 90) % 360; 
+        if(this.rotDegrees < 0){ this.rotDegrees = 360 + rotDegrees; }
+    }
     
 	public void moveRight(){this.coords[0] += App.GRIDSPACE;}
 	public void moveLeft(){this.coords[0] -= App.GRIDSPACE;}
