@@ -40,13 +40,9 @@ public class App extends PApplet {
     public void setup() {
         frameRate(FPS);
 
-		allSprites.put("DarkBlue", loadImage("Tiles/tileDarkBlue.png"));
-		allSprites.put("Green", loadImage("Tiles/tileGreen.png"));
-		allSprites.put("LightBlue", loadImage("Tiles/tileLightBlue.png"));
-		allSprites.put("Orange", loadImage("Tiles/tileOrange.png"));
-		allSprites.put("Purple", loadImage("Tiles/tilePurple.png"));
-		allSprites.put("Red", loadImage("Tiles/tileRed.png"));
-		allSprites.put("Yellow", loadImage("Tiles/tileYellow.png"));
+		for (String colour : this.colours){
+			allSprites.put(colour, loadImage("Tiles/tile" + colour + ".png"));
+		}
 
 		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
 		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png"));
@@ -142,12 +138,12 @@ public class App extends PApplet {
 				break;
 
 
-			case 88:
-				piece.pieceCWRotation();
-				break;
-			case 90:
-				piece.pieceCCWRotation();
-				break;
+			// case 88:
+			// 	piece.pieceCWRotation();
+			// 	break;
+			// case 90:
+			// 	piece.pieceCCWRotation();
+			// 	break;
 		}
 	}
 	
