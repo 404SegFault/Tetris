@@ -27,6 +27,7 @@ public class Block extends GameObject{
 	public void moveLeft(){this.coords[0] -= App.GRIDSPACE;}
 
 	public boolean getSet(){return this.set;}
+	public void setBlock(){this.set = true;}
 	public String getColour() {return this.colour;}
 
 	
