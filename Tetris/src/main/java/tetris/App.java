@@ -165,9 +165,7 @@ public class App extends PApplet {
 
 		// gets a new block based on the colour
 		Block block = new Block(allSprites.get(colour), 320, 64, colour);
-		System.out.println(block.toString());
 		moveableBlock = block;
-		System.out.println(block.toString());
 		
 		allBlocks.add(block);
 	}
