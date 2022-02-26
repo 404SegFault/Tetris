@@ -36,7 +36,6 @@ public class App extends PApplet {
 
 	private Piece piece;
 
-
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
         size(WIDTH, HEIGHT);
@@ -88,11 +87,9 @@ public class App extends PApplet {
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
 		background(112, 123, 138);
-		for(GameObject gameObject : this.allObjects){ gameObject.draw(this); }
-
 	}
 	// method to check if blocks are stacked on each other (on top)
-	public void blockStacked(){
+	public void hardDrop(){
 
 		Block highestBlock = null;
 		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
@@ -100,39 +97,65 @@ public class App extends PApplet {
 		// goes through all the blocks 
 		for(Block b : allBlocks){
 
-			// checks all blocks that have the same x coordinate, should find
-			if(b.getXCoord() == moveableBlock.getXCoord()){
-				// if it matches then keep reducing the block until it doesnt match anymore
-				
-				if (b.getYCoord() > lowestY){
-					highestBlock = b;
-				}
+			// checks all blocks that have the same x coordinate, and is higher than the lowest block?
+			if(b.getXCoord() == moveableBlock.getXCoord() && b.getYCoord() > lowestY && b.getSet()){
+				highestBlock = b;
 			}
 			
 		}
 
-	
-		moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+		// if it couldnt find a block that fits then the block should teleport straight to the bottom
+		if (highestBlock == null){
+			moveableBlock.setCoord(moveableBlock.getXCoord(), BOTTOM);
+			System.out.println("no blocks below this one");
+		}
+		else {
+			moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+			System.out.println("blocks below");
+		}
+
+		generateNewMoveable();
+	}
+
+	public boolean blockStacked(){
+
+		// goes through all the blocks 
+		for(Block b : allBlocks){
+
+			// checks if the block is stacked above it and that the 
+			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
+				// if it matches 
+				return true;
+			}
+			
+		}
+		return false;
 	}
 
 	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
 
-		// if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
-		if (moveableBlock.getYCoord() >= BOTTOM ){
+		if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
 			generateNewMoveable();
 		}
 	}
 
 	private void generateNewMoveable(){
+		//sets the current block
 		moveableBlock.setBlock();
+
+		// randomly chooses a colour
 		Random rand = new Random();
 		String colour = colours[rand.nextInt(7)];
 
+		// gets a new block based on the colour
 		Block block = new Block(allSprites.get(colour), 320, 64, colour);
-		this.moveableBlock = block;
-		this.allBlocks.add(block);
+		System.out.println(block.toString());
+		moveableBlock = block;
+		System.out.println(block.toString());
+		
+		allBlocks.add(block);
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -143,6 +166,7 @@ public class App extends PApplet {
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
 		}
+
 
 		// this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
@@ -169,10 +193,11 @@ public class App extends PApplet {
 				break;
 
 			case ' ':
-				newCoords[1] = BOTTOM;
+				hardDrop();
 		}
 
-		if (blockSideCollision(newCoords) == false){
+		// if it doesnt collide with any blocks then it can go into that position
+		if (blockSideCollision(newCoords) == false && keyCode != ' '){
 			this.moveableBlock.setCoord(newCoords);
 		}
 	}
