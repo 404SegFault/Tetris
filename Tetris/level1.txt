@@ -9,7 +9,7 @@
  R BGG  
  R   B  
  R   B R
- Y BBR B
+   BBR B
  RG  BGR
  GG RBG 
  G   B  

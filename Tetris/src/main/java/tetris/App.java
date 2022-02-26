@@ -38,6 +38,7 @@ public class App extends PApplet {
 	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
 
 	private Block moveableBlock;
+	private Block virus;
 
 	private Piece piece;
 
@@ -67,6 +68,9 @@ public class App extends PApplet {
 		// for (int i = 0; i <  pillFiles.size(); i++){
 		// 	allSprites.put(pillFiles, loadImage("pills/" + pillFiles + ".png"));
 		// }
+		allSprites.put("Blue_virus", loadImage("viruses/Blue_virus.png"));
+		allSprites.put("Green_virus", loadImage("viruses/Green_virus.png"));
+		allSprites.put("Red_virus", loadImage("viruses/Red_virus.png"));
 
 		config = loadJSONObject("config.json");
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
@@ -79,6 +83,9 @@ public class App extends PApplet {
 		this.dropTimer = new DropTimer(this);
 		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
 		timer.schedule(dropTimer, 0, dropMilliseconds);
+
+		// this.virus = new Block(allSprites.get("Green_virus"), 320, 64, "Green");
+		// this.allBlocks.add(virus);
 
 		Block block = new Block(allSprites.get("DarkBlue"), 320, 64, "DarkBlue");
 		this.moveableBlock = block;
@@ -267,18 +274,21 @@ public class App extends PApplet {
 				Block virus = null;
 
 				// spawns the appropriate sprite based on the symbol
-				if (symbol == 'R'){
-					virus = new Block(this.allSprites.get("Red_virus"), cursorX, cursorY, "Red");
-				} 
 				if (symbol == 'B'){
 					virus = new Block(this.allSprites.get("Blue_virus"), cursorX, cursorY, "Blue");
 				} 
 				if (symbol == 'G'){
 					virus = new Block(this.allSprites.get("Green_virus"), cursorX, cursorY, "Green");
 				} 
+				if (symbol == 'R'){
+					virus = new Block(this.allSprites.get("Red_virus"), cursorX, cursorY, "Red");
+				} 
+			
 
 				//adds the virus to the drawing list and moves to the next position of where the sprite should spawn 
-				allBlocks.add(virus);
+				if (virus != null){
+					allBlocks.add(virus);
+				}
 				cursorX += App.GRIDSPACE;
 			}
 			// resets the spawining thing to the left again and moves down the cursor
