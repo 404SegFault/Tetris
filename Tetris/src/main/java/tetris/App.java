@@ -123,12 +123,26 @@ public class App extends PApplet {
 		generateNewMoveable();
 	}
 
+	public boolean blockStacked(){
+
+		// goes through all the blocks 
+		for(Block b : allBlocks){
+
+			// checks if the block is stacked above it and that the 
+			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
+				// if it matches 
+				return true;
+			}
+			
+		}
+		return false;
+	}
+
 	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
-
-		// if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
-		if (moveableBlock.getYCoord() >= BOTTOM ){
+		
+		if (moveableBlock.getYCoord() >= 608 || blockStacked()){
 			generateNewMoveable();
 		}
 	}
