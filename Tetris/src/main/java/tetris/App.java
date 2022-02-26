@@ -16,6 +16,10 @@ public class App extends PApplet {
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
 
+    public static final int GRIDWIDTH = 8;
+    public static final int GRIDHEIGHT = 16;
+
+
 	public static final int TOP = 64;
 	public static final int LEFT = 160;
 	public static final int RIGHT = 448;
@@ -228,38 +232,54 @@ public class App extends PApplet {
 		this.text("YOU WIN", WIDTH/2 - App.GRIDSPACE * 3 + 16, HEIGHT/2);
 	}
 
-	public void loadLevel(JSONObject config){
+	public void loadLevel(String filepath){
 		//App.GRIDSPACE * 2 offset from where the game map actually starts
-		loadMap(levelFilePath);
+		map = new char[HEIGHT][WIDTH];
+		try {
+			// -------------------------LOADING THE MAIN MAP--------------------------
+			File f = new File(filepath);
+			Scanner sc = new Scanner(f);
+		
+			int rowIndex = 0;
+			// scans the entire map
+			while (sc.hasNext()){
+				String row =  sc.nextLine();
+				char[] rowInCharacters = row.toCharArray(); 
+				// sets the row to the characters
+				map[rowIndex] = rowInCharacters;
+				rowIndex ++;
+			}
+		}
+		catch (FileNotFoundException e) { 
+ 			e.printStackTrace();
+		}
 
-		int cursorY = App.GRIDSPACE * 2;
-		int cursorX = 0;
+		int cursorX = LEFT;
+		int cursorY = TOP;
 
 		//--------------------------------LOADING THE SPRITES FROM THE MAP------------------------------------
 		
-		char[][] backgroundMap = this.backmap;
-
-		for (char[] row : backgroundMap){
+		for (char[] row : map){
 			for (char symbol: row){
-				GameObject newObject = null;
-				// paints the image of the ground if its empty
-				if (symbol == ' '){
-					newObject = new Flat(this.allSprites.get("empty"), cursorX, cursorY);
-				} 
-				// creates a new wall at the coordinates where the wall will be drawn on later
-				if (symbol == 'W') {
-					newObject = new Wall(this.allSprites.get("wall"), cursorX, cursorY);
-				}
-				if (symbol == 'G'){
-					newObject = new Flat(this.allSprites.get("goal"), cursorX, cursorY);
-					this.goalCoordinates = new int[]{cursorX, cursorY};
-				}
+				Block virus = null;
 
-				//moves to the next position of where the sprite should spawn 
-				allObjects.add(newObject);
+				// spawns the appropriate sprite based on the symbol
+				if (symbol == 'R'){
+					virus = new Block(this.allSprites.get("Red_Virus"), cursorX, cursorY);
+				} 
+				if (symbol == 'B'){
+					virus = new Block(this.allSprites.get("Blue_Virus"), cursorX, cursorY);
+				} 
+				if (symbol == 'G'){
+					virus = new Block(this.allSprites.get("Green_Virus"), cursorX, cursorY);
+				} 
+
+				//adds the virus to the drawing list and moves to the next position of where the sprite should spawn 
+				allBlocks.add(virus);
 				cursorX += App.GRIDSPACE;
 			}
-			cursorX = 0;
+			// resets the spawining thing to the left again and moves down the cursor
+			cursorX = LEFT;
 			cursorY += App.GRIDSPACE;
 		}
 	}
