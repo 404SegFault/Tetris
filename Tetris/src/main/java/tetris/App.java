@@ -7,13 +7,14 @@ import processing.data.JSONObject;
 
 import java.util.*;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 public class App extends PApplet {
 	/////////////////////////////////ATTRIBUTES////////////////////////////////////
     public static final int WIDTH = 640;
     public static final int HEIGHT = 640;
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
-
 	private PFont font;
 	private HashMap<String, PImage> allSprites;
 	private ArrayList<GameObject> allObjects;
@@ -74,7 +75,7 @@ public class App extends PApplet {
 		timer.schedule(dropTimer, 0, dropMilliseconds);
 
 		Block block = new Block(allSprites.get("DarkBlue"), 320, 0, "DarkBlue");
-
+		this.moveableBlock = block;
 		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		this.allBlocks.add(block);
@@ -102,14 +103,23 @@ public class App extends PApplet {
 
 		// FIXME THIS IS SO FUCKING BAD, IT SHOULDNT HAVE TO CHECK EVERY TICK BUT IDK WHERE ELSE
 		// goes through all the blocks
-		for (int i = 0; i < this.allBlocks.size(); i++){
+		// for (int i = 0; i < this.allBlocks.size(); i++){
 
-			// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
-			if (this.allBlocks.get(i).getSet() == false){
-				this.moveableBlock = this.allBlocks.get(i);
-			}
+		// 	// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
+		// 	if (this.allBlocks.get(i).getSet() == false){
+		// 		this.moveableBlock = this.allBlocks.get(i);
+		// 	}
+		// }
+
+		if (moveableBlock.getYCoord() >= 608){
+			moveableBlock.setBlock();
+			Random rand = new Random();
+			String colour = colours[rand.nextInt(7)];
+
+			Block block = new Block(allSprites.get(colour), 320, 0, colour);
+			this.moveableBlock = block;
+			this.allBlocks.add(block);
 		}
-
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -131,14 +141,19 @@ public class App extends PApplet {
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
-				moveableBlock.moveLeft();
-				break;
+				if (moveableBlock.getXCoord() >= 0){
+					moveableBlock.moveLeft();
+				}break;
+				
 			case PApplet.RIGHT:
-				moveableBlock.moveRight();
-				break;
+				if (moveableBlock.getXCoord() <= 640){
+					moveableBlock.moveRight();
+				}break;
+
 			case PApplet.DOWN:
 				moveableBlock.moveDown();
 				break;
+
 
 			case 88:
 				piece.pieceCWRotation();
@@ -146,7 +161,6 @@ public class App extends PApplet {
 			case 90:
 				piece.pieceCCWRotation();
 				break;
-
 		}
 	}
 	

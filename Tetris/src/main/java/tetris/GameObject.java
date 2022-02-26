@@ -25,6 +25,10 @@ public abstract class GameObject {
 	public int[] getCoords() {return this.coords;}
 	public boolean shouldBeRemoved() {return this.beRemoved;}
 	public String toString(){return this.getClass().getSimpleName() + " " + Arrays.toString(this.getCoords());}
+	public int getXCoord(){return this.coords[0];}
+	public int getYCoord(){return this.coords[1];}
+		
+
 	
 	////////////////////////////////////////////SETTERS/////////////////////////////////////////
 	public void removeObject() {this.beRemoved = true;}

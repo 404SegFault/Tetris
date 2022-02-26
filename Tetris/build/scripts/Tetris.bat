@@ -71,7 +71,7 @@ set CLASSPATH=%APP_HOME%\lib\Tetris.jar;%APP_HOME%\lib\guava-28.0-jre.jar;%APP_H
 
 
 @rem Execute Tetris
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %TETRIS_OPTS%  -classpath "%CLASSPATH%" demolition.App %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %TETRIS_OPTS%  -classpath "%CLASSPATH%" tetris.App %*
 
 :end
 @rem End local scope for the variables with windows NT shell
