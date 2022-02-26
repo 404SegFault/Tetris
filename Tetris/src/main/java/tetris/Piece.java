@@ -47,7 +47,7 @@ public class Piece extends GameObject{
         super(sprite,x,y);
 
         this.leftHalf = new Block(allSprites.get(colour1), x-App.GRIDSPACE, y, colour1);
-        this.leftHalf.doRotate(2);
+        this.leftHalf.setDegrees(180);
         this.rightHalf = new Block(allSprites.get(colour2), x, y, colour2);
 
         pieceDir = 0;
