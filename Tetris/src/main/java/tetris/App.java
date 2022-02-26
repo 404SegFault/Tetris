@@ -106,14 +106,15 @@ public class App extends PApplet {
 	public void hardDrop(){
 
 		Block highestBlock = null;
-		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
+		int highestY = 700; //no block can ever be lower than so you want this value to be replaces as soon as possible
 
 		// goes through all the blocks 
 		for(Block b : allBlocks){
 
-			// checks all blocks that have the same x coordinate, and is higher than the lowest block?
-			if(b.getXCoord() == moveableBlock.getXCoord() && b.getYCoord() > lowestY && b.getSet()){
+			// checks all blocks that have the same x coordinate, and is higher than the current highest block
+			if(b.getXCoord() == moveableBlock.getXCoord() && b.getSet() && b.getYCoord() < highestY){
 				highestBlock = b;
+				System.out.println(b.toString());
 			}
 			
 		}
@@ -285,6 +286,7 @@ public class App extends PApplet {
 
 				//adds the virus to the drawing list and moves to the next position of where the sprite should spawn 
 				if (virus != null){
+					virus.setBlock();
 					allBlocks.add(virus);
 				}
 				cursorX += App.GRIDSPACE;
