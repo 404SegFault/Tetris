@@ -7,19 +7,19 @@ import processing.data.JSONObject;
 
 import java.util.*;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
+
 public class App extends PApplet {
 	/////////////////////////////////ATTRIBUTES////////////////////////////////////
     public static final int WIDTH = 640;
     public static final int HEIGHT = 640;
     public static final int GRIDSPACE = 32;
     public static final int FPS = 60;
-
 	private PFont font;
-	private HashMap<String, PImage> allSprites;
+	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
 	private ArrayList<GameObject> allObjects;
 	private JSONObject config;
 
-	// private HashMap<String, PImage> allSprites = new HashMap<>();
 	private ArrayList<Block> allBlocks = new ArrayList<>();
 	private DropTimer dropTimer;
 	private int dropMilliseconds = 2000;
@@ -38,8 +38,6 @@ public class App extends PApplet {
 
 	/**Loads the files inside the resources into the application, where it can be used in the game**/
     public void setup() {
-		HashMap<String, PImage> allSprites = new HashMap<>();
-		this.allObjects = new ArrayList<GameObject>();
         frameRate(FPS);
 
 		allSprites.put("test_sprite", loadImage("Tiles/checkerboard.png"));
@@ -104,16 +102,15 @@ public class App extends PApplet {
 
 		}
 
-		// FIXME THIS IS SO FUCKING BAD, IT SHOULDNT HAVE TO CHECK EVERY TICK BUT IDK WHERE ELSE
-		// goes through all the blocks
-		for (int i = 0; i < this.allBlocks.size(); i++){
+		if (moveableBlock.getYCoord() >= 608){
+			moveableBlock.setBlock();
+			Random rand = new Random();
+			String colour = colours[rand.nextInt(7)];
 
-			// goes through all the blocks and checks whether it is set or not if it is not set then you can still move it
-			if (this.allBlocks.get(i).getSet() == false){
-				this.moveableBlock = this.allBlocks.get(i);
-			}
+			Block block = new Block(allSprites.get(colour), 320, 0, colour);
+			this.moveableBlock = block;
+			this.allBlocks.add(block);
 		}
-
 	}
 
 	/** Goes through all the objects and draws them **/
@@ -135,28 +132,31 @@ public class App extends PApplet {
 	public void keyPressed(){
 		switch (keyCode){
 			case PApplet.LEFT:
-				moveableBlock.moveLeft();
-				break;
+				if (moveableBlock.getXCoord() > 0){
+					moveableBlock.moveLeft();
+				}break;
+				
 			case PApplet.RIGHT:
-				moveableBlock.moveRight();
-				break;
+				if (moveableBlock.getXCoord() < 608){
+					moveableBlock.moveRight();
+				}break;
+
 			case PApplet.DOWN:
 				moveableBlock.moveDown();
 				break;
 
-			case 88:
-				piece.pieceCWRotation();
-				break;
-			case 90:
-				piece.pieceCCWRotation();
-				break;
 
+			// case 88:
+			// 	piece.pieceCWRotation();
+			// 	break;
+			// case 90:
+			// 	piece.pieceCCWRotation();
+			// 	break;
 		}
 	}
 	
 	/** changes can move to true so that the player can move again**/
 	public void keyReleased(){ 
-		;
 	}
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
