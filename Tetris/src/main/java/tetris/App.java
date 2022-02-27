@@ -169,11 +169,15 @@ public class App extends PApplet {
 
 
 	private void checkForMatch(){
-
-		//Checking bottom
-
 		
 		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchBottom(moveablePiece.getLeftHalf()).size());
+
+		if(matchBottom(moveablePiece.getLeftHalf()).size()>=4){
+			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
 		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchLeft(moveablePiece.getLeftHalf()).size());
 		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchRight(moveablePiece.getLeftHalf()).size());
 
@@ -181,6 +185,7 @@ public class App extends PApplet {
 		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchLeft(moveablePiece.getRightHalf()).size());
 		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchRight(moveablePiece.getRightHalf()).size());
 
+		
 	}
 
 	private List<Block> matchBottom(Block node){
@@ -229,43 +234,6 @@ public class App extends PApplet {
 	}		
 
 
-	// private void checkForMatch(){
-	// 	int[] cursor = {LEFT, TOP};
-	// 	int adjacentBlocks = 0;
-
-	// 	ArrayList<int[]> coordsToRemove = new ArrayList<int[]>();
-
-	// 	// while the y cursor is still not at the bottom
-	// 	while (cursor[1] < BOTTOM){
-
-	// 		// the x cursor goes as much right as possible before hitting the border
-	// 		while (cursor[0] <= RIGHT) {
-				
-	// 			// needs to check the row it is currently on by giving the Y 
-	// 			// FIXME POTENTIAL BUG BECAUSE IT MIGHT PASS A REFERECE TO IT AND FUCK UP THE POSITIONING INSIDE THE FUNCTION? 
-	// 			int finalXPosition = runsTo(cursor);
-				
-	// 			adjacentBlocks = (finalXPosition - adjacentBlocks + 1) % App.GRIDSPACE;
-
-	// 			if (adjacentBlocks >= 4){
-	// 				for (int i = 0 ; i < adjacentBlocks; i++){
-	// 					coordsToRemove.add(cursor);
-	// 				}
-	// 			}
-
-
-	// 		}
-		
-	// 		cursor[0] = LEFT;
-	// 		cursor[1] += App.GRIDSPACE;
-	// 	}
-
-	// 	for (int[] coord : coordsToRemove){
-	// 		System.out.println(findBlock(coord).toString());
-	// 		// FIXME there can probably 2 coordinates and it would try to remove something that doesnt exist 
-	// 		allBlocks.remove(findBlock(coord));
-	// 	}
-	// } 
 
 	private int runsTo(int[] cursor) {
 		// FIXME NEED TO CHECK IF THIS POINTS TO THE VALUE INSIDE THE CURSOR OR IS A NEW VALUE ?
