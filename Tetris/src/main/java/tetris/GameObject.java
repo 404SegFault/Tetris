@@ -6,11 +6,13 @@ public abstract class GameObject {
 	protected PImage sprite;
 	protected int[] coords;
 	protected boolean beRemoved = false;
+	protected String type;
 
 	/**is used to create all GameObjects i.e. Flat, Wall, BrokenWall, Enemy and so on**/
-	public GameObject(PImage sprite, int x, int y){
+	public GameObject(PImage sprite, int x, int y, String type){
 		this.sprite = sprite;
 		this.coords = new int[]{x, y};
+		this.type = type;
 	}
 	
 	/**
