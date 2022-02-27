@@ -170,10 +170,17 @@ public class App extends PApplet {
 
 	private void checkForMatch(){
 		
+
 		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchBottom(moveablePiece.getLeftHalf()).size());
 
 		if(matchBottom(moveablePiece.getLeftHalf()).size()>=4){
 			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchBottom(moveablePiece.getRightHalf()).size()>=4){
+			for(Block b : matchBottom(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
 			}
 		}
@@ -196,7 +203,13 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 			if(node.getXCoord() == b.getXCoord() && node.getYCoord() == b.getYCoord() - App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
+					
+					if(toBeRemoved.contains(b)){
+						continue;
+					}
+
 					toBeRemoved.addAll(matchBottom(b));
+
 				}
 			}
 		}
@@ -211,7 +224,7 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() + App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
-					toBeRemoved.addAll(matchBottom(b));
+					toBeRemoved.addAll(matchRight(b));
 				}
 			}
 		}
@@ -226,7 +239,7 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() - App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
-					toBeRemoved.addAll(matchBottom(b));
+					toBeRemoved.addAll(matchLeft(b));
 				}
 			}
 		}
