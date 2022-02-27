@@ -175,8 +175,9 @@ public class App extends PApplet {
 		if (moveablePiece.checkVirusUnder(allBlocks) == true){
 			hardDrop();
 			//Insert pattern checkcode here
-			checkForMatch();
-			generateNewMoveable();
+			// checkForMatch();
+			// generateNewMoveable();
+			//Insert pattern checking code here 
 		}
 
 		
