@@ -173,13 +173,13 @@ public class App extends PApplet {
 
 		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchBottom(moveablePiece.getLeftHalf()).size());
 
-		if(matchBottom(moveablePiece.getLeftHalf()).size()>=4){
+		if(matchBottom(moveablePiece.getLeftHalf()).size()>3){
 			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
 			}
 		}
 
-		if(matchBottom(moveablePiece.getRightHalf()).size()>=4){
+		if(matchBottom(moveablePiece.getRightHalf()).size()>3){
 			for(Block b : matchBottom(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
 			}
@@ -204,12 +204,10 @@ public class App extends PApplet {
 			if(node.getXCoord() == b.getXCoord() && node.getYCoord() == b.getYCoord() - App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
 					
-					if(toBeRemoved.contains(b)){
-						continue;
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchBottom(b));
+						
 					}
-
-					toBeRemoved.addAll(matchBottom(b));
-
 				}
 			}
 		}
