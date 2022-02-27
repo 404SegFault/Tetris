@@ -35,12 +35,13 @@ public class App extends PApplet {
 	private DropTimer dropTimer;
 	private int dropMilliseconds = 2000;
 
-	private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+	//private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
+	private String[] colours = new String[]{"Blue","Green","Red"};
 
-	private Block moveableBlock;
+	private Piece moveablePiece;
 	private Block virus;
 
-	private Piece piece;
+	//private Piece piece;
 
 	/////////////////////////////CREATING THE APP OBJECT//////////////////////////
     public void settings() {
@@ -51,20 +52,16 @@ public class App extends PApplet {
     public void setup() {
         frameRate(FPS);
 
-		for (String colour : this.colours){
-			allSprites.put(colour, loadImage("Tiles/tile" + colour + ".png"));
-		}
+		// for (String colour : this.colours){
+		// 	allSprites.put(colour, loadImage("Tiles/tile" + colour + ".png"));
+		// }
 		allSprites.put("test_sprite", loadImage("Tiles/checkerboard.png"));
-
-		allSprites.put("Red_Red", loadImage("pills/Red_Red.png"));
-		allSprites.put("Blue_Blue", loadImage("pills/Blue_Blue.png"));
-		allSprites.put("Blue_Green", loadImage("pills/Blue_Green.png"));
-		allSprites.put("Blue", loadImage("pills/Blue.png"));
-		allSprites.put("Green_Green", loadImage("pills/Green_Green.png"));
-		allSprites.put("Green_Red", loadImage("pills/Green_Red.png"));
 
 		String[] pillFiles = new String[]{"Red_Red", "Blue_Blue", "Blue_Green", "Blue", "Green_Green", "Green_Red", "Green", "Red_Blue", "Red_Red", "Red"};
 
+		for (String pillFile : pillFiles){
+			allSprites.put(pillFile, loadImage("pills/" + pillFile + ".png"));
+		}
 		// for (int i = 0; i <  pillFiles.size(); i++){
 		// 	allSprites.put(pillFiles, loadImage("pills/" + pillFiles + ".png"));
 		// }
@@ -72,30 +69,30 @@ public class App extends PApplet {
 		allSprites.put("Green_virus", loadImage("viruses/Green_virus.png"));
 		allSprites.put("Red_virus", loadImage("viruses/Red_virus.png"));
 
-		config = loadJSONObject("config.json");
+		// config = loadJSONObject("config.json");
 		// this.timeRemaining = config.getJSONArray("levels").getJSONObject(0).getInt("time"); maybe a level system
 		
 		Timer timer = new Timer();
 
 		loadLevel("level1.txt");
 
-		//the drop timer handles all the blocks falling
-		this.dropTimer = new DropTimer(this);
-		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
-		timer.schedule(dropTimer, 0, dropMilliseconds);
-
 		// this.virus = new Block(allSprites.get("Green_virus"), 320, 64, "Green");
 		// this.allBlocks.add(virus);
 
-		Block block = new Block(allSprites.get("DarkBlue"), 320, 64, "DarkBlue");
-		this.moveableBlock = block;
-		this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
+		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, "Blue", "Green");
+		this.moveablePiece = newPiece;
+		//this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
-		this.allBlocks.add(block);
+		//this.allBlocks.add(block);
 
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
 		fill(0); //makes the text black
+
+		//the drop timer handles all the blocks falling
+		this.dropTimer = new DropTimer(this);
+		// uses the drop timer, (dropTimer, times it counts town, total rundown time)
+		timer.schedule(dropTimer, 0, dropMilliseconds);
     }
 	
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
@@ -106,25 +103,37 @@ public class App extends PApplet {
 	public void hardDrop(){
 
 		Block highestBlock = null;
-		int highestY = 640; //no block can ever be lower than so you want this value to be replaces as soon as possible
+		int lowestY = -App.GRIDSPACE; //no block can ever be higher than -32
 
-		// goes through all the blocks 
-		for(Block b : allBlocks){
+		// goes through all the blocks
+		for(Block pillHalf : moveablePiece.getBothHalves()){ 
+			highestBlock = null;
+			ArrayList<Block> sameXBlocks = new ArrayList<>();
 
-			// checks all blocks that have the same x coordinate, and is higher than the current highest block
-			if(b.getXCoord() == moveableBlock.getXCoord() && b.getSet() && b.getYCoord() < highestY){
-				highestBlock = b;
-				highestY = b.getYCoord();
+			for(Block b : allBlocks){
+				if(b.getXCoord() == pillHalf.getXCoord() && pillHalf.getYCoord() < b.getYCoord()){ sameXBlocks.add(b); }
+			}
+
+			if(sameXBlocks.size() != 0){
+				highestBlock = sameXBlocks.get(0);
+				for(Block b : sameXBlocks){
+					if(b.getYCoord() < highestBlock.getYCoord()){ highestBlock = b; }
+				}
 			}
 			
-		}
-
-		// if it couldnt find a block that fits then the block should teleport straight to the bottom
-		if (highestBlock == null){
-			moveableBlock.setCoord(moveableBlock.getXCoord(), BOTTOM);
-		}
-		else {
-			moveableBlock.setCoord(moveableBlock.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+			// if it couldnt find a block that fits then the block should teleport straight to the bottom
+	
+			if (highestBlock == null){
+				
+				pillHalf.setCoord(pillHalf.getXCoord(), BOTTOM);
+				System.out.println("no blocks below this one");
+			}
+			else {
+				System.out.printf("%d, %d\n", pillHalf.getXCoord(), pillHalf.getYCoord());
+				pillHalf.setCoord(pillHalf.getXCoord(), highestBlock.getYCoord() - App.GRIDSPACE);
+				System.out.println("blocks below");
+			}
+			allBlocks.add(pillHalf);
 		}
 
 		generateNewMoveable();
@@ -136,7 +145,7 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 
 			// checks if the block is stacked above it and that the 
-			if(b.getYCoord() - 32 == moveableBlock.getYCoord() && b.getXCoord() == moveableBlock.getXCoord()){
+			if(b.getYCoord() - 32 == moveablePiece.getYCoord() && b.getXCoord() == moveablePiece.getXCoord()){
 				// if it matches 
 				return true;
 			}
@@ -149,30 +158,36 @@ public class App extends PApplet {
 	public void tick(){
 		this.frameCount++;
 
-		if (moveableBlock.getYCoord() >= BOTTOM || blockStacked()){
-			generateNewMoveable();
+		if (moveablePiece.checkVirusUnder(allBlocks) == true){
+			hardDrop();
+			//Insert pattern checkcode here
 		}
 	}
 
 	private void generateNewMoveable(){
 		//sets the current block
-		moveableBlock.setBlock();
+		Block pieceLeftHalf = moveablePiece.getLeftHalf();
+		Block pieceRightHalf = moveablePiece.getRightHalf();
 
+		pieceLeftHalf.setBlock(); 
+		pieceRightHalf.setBlock();
+		
 		// randomly chooses a colour
 		Random rand = new Random();
-		String colour = colours[rand.nextInt(7)];
+		String colour1 = colours[rand.nextInt(3)];
+		String colour2 = colours[rand.nextInt(3)];
 
 		// gets a new block based on the colour
-		Block block = new Block(allSprites.get(colour), 320, 64, colour);
-		moveableBlock = block;
+		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, colour1, colour2);
+		moveablePiece = newPiece;
 		
-		allBlocks.add(block);
 	}
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
 		this.background(loadImage("Tiles/checkerboard.png"));
+		moveablePiece.draw(this);
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
 			allBlocks.get(i).draw(this);
@@ -188,28 +203,32 @@ public class App extends PApplet {
 
 		// before it is allowed to move to the open space it needs to check all of the coordinates in the space where it wants to go
 		// if there is a preexisting block in the new position it wont let it go there
-		int[] newCoords = this.moveableBlock.getCoords().clone();
 
 		switch (keyCode){
 			case PApplet.LEFT:
-				newCoords[0] -= App.GRIDSPACE;
+				moveablePiece.pieceLeftMove(allBlocks);
 				break;
-				
+			
 			case PApplet.RIGHT:
-				newCoords[0] += App.GRIDSPACE;
+				moveablePiece.pieceRightMove(allBlocks);
 				break;
 
 			case PApplet.DOWN:
-				newCoords[1] += App.GRIDSPACE;
+				moveablePiece.pieceDownMove();
+				break;
+			
+			case 88: //x for Clockwise	
+				System.out.println("clockwise");	
+				moveablePiece.pieceCWRotation();
+				break;
+
+			case 90: //z for AntiClockwise
+				System.out.println("anticlockwise");
+				moveablePiece.pieceCCWRotation();
 				break;
 
 			case ' ':
 				hardDrop();
-		}
-
-		// if it doesnt collide with any blocks then it can go into that position
-		if (blockSideCollision(newCoords) == false && keyCode != ' '){
-			this.moveableBlock.setCoord(newCoords);
 		}
 	}
 
@@ -241,6 +260,15 @@ public class App extends PApplet {
 
 	public void loadLevel(String filepath){
 		//App.GRIDSPACE * 2 offset from where the game map actually starts
+
+		/*
+		randomly generating map:
+		normal: an array of {" ", "R", "B", "G"}
+		random generator from 0-4
+		each index gets a randomly allocated ting
+		*/
+
+
 		char[][] map = new char[HEIGHT][WIDTH];
 		try {
 			// -------------------------LOADING THE MAIN MAP--------------------------
@@ -280,11 +308,9 @@ public class App extends PApplet {
 				if (symbol == 'R'){
 					virus = new Block(this.allSprites.get("Red_virus"), cursorX, cursorY, "Red");
 				} 
-			
 
 				//adds the virus to the drawing list and moves to the next position of where the sprite should spawn 
 				if (virus != null){
-					virus.setBlock();
 					allBlocks.add(virus);
 				}
 				cursorX += App.GRIDSPACE;
@@ -303,6 +329,6 @@ public class App extends PApplet {
 
 	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
 
-	public Block getMoveableBlock(){return this.moveableBlock;}
+	public Piece getMoveablePiece(){return this.moveablePiece;}
 }
 

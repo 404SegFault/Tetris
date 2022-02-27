@@ -5,6 +5,7 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.6.3/userguide/tutorial_java_projects.html
  */
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -13,6 +14,8 @@ plugins {
     id 'application'
 
     id 'jacoco'
+
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 repositories {
@@ -27,17 +30,26 @@ dependencies {
     implementation 'org.processing:core:3.3.7'
 
     // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    //testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
     // Uncomment this for JUnit 4
     // testImplementation 'junit:junit:4.13.2'
 }
 
-test {
-    useJUnitPlatform()
-}
-
 application {
     // Define the main class for the application
-    mainClass = 'tetris.App'
+    //mainClass = 'tetris.App'
+    mainClassName = 'tetris.App' // needed to work on hruday's machine
+}
+
+sourceSets.main.java.srcDirs = ['src']
+mainClassName = 'tetris.App'
+
+jar {
+  manifest {
+    attributes "Main-Class": "$mainClassName"
+  }
+  exclude 'META-INF/*.RSA'
+  exclude 'META-INF/*.SF'
+  exclude 'META-INF/*.DSA'
 }
