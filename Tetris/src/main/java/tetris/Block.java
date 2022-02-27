@@ -187,5 +187,8 @@ public class Block extends GameObject{
 	public void setBlock(){this.set = true;}
 	public String getColour() {return this.colour;}
 
+	public boolean sameColourAs(Block newBlock){return this.colour.equals(newBlock.getColour());}
+
+	public String toString(){return this.getClass().getSimpleName() + " " + Arrays.toString(this.getCoords()) + " " + this.colour; }
 	
 }

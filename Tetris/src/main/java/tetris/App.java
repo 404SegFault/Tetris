@@ -81,6 +81,7 @@ public class App extends PApplet {
 
 		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, "Blue", "Green");
 		this.moveablePiece = newPiece;
+		generateNewMoveable();
 		//this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		//this.allBlocks.add(block);
@@ -136,8 +137,7 @@ public class App extends PApplet {
 			allBlocks.add(pillHalf);
 		}
 
-		generateNewMoveable();
-		
+		setPiece();
 	}
 
 	public boolean blockStacked(){
@@ -159,33 +159,179 @@ public class App extends PApplet {
 	public void tick(){
 		this.frameCount++;
 
-		if(!GameOver()){
-			if (moveablePiece.checkVirusUnder(allBlocks) == true){
-				hardDrop();
-				//Insert pattern checkcode here
-			}
-		}else{
-			displayGameOver();
+		// if(!GameOver()){
+		// 	if (moveablePiece.checkVirusUnder(allBlocks) == true){
+		// 		hardDrop();
+		// 		//Insert pattern checkcode here
+		// 	}
+		// }else{
+		// 	displayGameOver();
+		if (moveablePiece.checkVirusUnder(allBlocks) == true){
+			hardDrop();
+			//Insert pattern checkcode here
+			checkForMatch();
+			generateNewMoveable();
 		}
 
 		
 	}
 
-	private void generateNewMoveable(){
+
+	private void checkForMatch(){
+		
+		if(matchBottom(moveablePiece.getLeftHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchBottom(moveablePiece.getRightHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getRightHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchLeft(moveablePiece.getLeftHalf()).size()>3){
+			for(Block b : matchLeft(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchLeft(moveablePiece.getRightHalf()).size()>3){
+			for(Block b : matchLeft(moveablePiece.getRightHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchRight(moveablePiece.getLeftHalf()).size()>3){
+			for(Block b : matchRight(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchRight(moveablePiece.getRightHalf()).size()>3){
+			for(Block b : matchRight(moveablePiece.getRightHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		
+	}
+
+	private List<Block> matchBottom(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getXCoord() == b.getXCoord() && node.getYCoord() == b.getYCoord() - App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchBottom(b));
+					}
+				}
+			}
+		}
+		return toBeRemoved;
+	}	
+
+	private List<Block> matchRight(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() + App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchRight(b));
+					}
+				}
+			}
+		}
+		return toBeRemoved;
+	}	
+
+	private List<Block> matchLeft(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() - App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchLeft(b));
+					}
+				}
+			}
+		}
+		return toBeRemoved;
+	}		
+
+
+
+	private int runsTo(int[] cursor) {
+		// FIXME NEED TO CHECK IF THIS POINTS TO THE VALUE INSIDE THE CURSOR OR IS A NEW VALUE ?
+		// int xPosition = cursor[0];
+
+		while (cursor[0] < RIGHT) {
+
+			Block currentBlock = findBlock(cursor);
+			Block blockToTheRight = findBlock(new int[]{cursor[0] + 32, cursor[1]});
+			
+			// finds the block it is currently on and matches the colour
+			if (currentBlock.sameColourAs(blockToTheRight) == false) {
+				return cursor[0];
+			}
+
+			cursor[0] += App.GRIDSPACE;
+		}
+
+		// if you cant find it then return the end of the screen
+		return cursor[0];
+	}
+
+	private Block findBlock(int[] coords){
+		// updates this object with the newest one
+		for (Block block : allBlocks){
+			if (Arrays.equals(block.getCoords(), coords)){
+				return block;
+			}
+		}
+
+		return null;
+	}
+
+
+	private void setPiece(){
 		//sets the current block
 		Block pieceLeftHalf = moveablePiece.getLeftHalf();
 		Block pieceRightHalf = moveablePiece.getRightHalf();
 
 		pieceLeftHalf.setBlock(); 
 		pieceRightHalf.setBlock();
+	}
+
+	private void generateNewMoveable(){
 		
+		//
+
 		// randomly chooses a colour
 		Random rand = new Random();
 		String colour1 = colours[rand.nextInt(3)];
 		String colour2 = colours[rand.nextInt(3)];
 
 		// gets a new block based on the colour
-		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, colour1, colour2);
+
+		String nextColour = colour1 + "_" + colour2;
+		
+		if(allSprites.get(nextColour) == null){
+			nextColour = colour2 + "_"+ colour1;
+		}
+		
+		Piece newPiece = new Piece(allSprites, allSprites.get(nextColour), 320, 64, colour1, colour2);
 		moveablePiece = newPiece;
 		
 	}
@@ -224,6 +370,11 @@ public class App extends PApplet {
 				moveablePiece.pieceDownMove();
 				break;
 			
+			case PApplet.UP:
+				System.out.println("clockwise");	
+					moveablePiece.pieceCWRotation();
+					break;
+
 			case 88: //x for Clockwise	
 				System.out.println("clockwise");	
 				moveablePiece.pieceCWRotation();
