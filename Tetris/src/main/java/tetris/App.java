@@ -163,6 +163,7 @@ public class App extends PApplet {
 			hardDrop();
 			//Insert pattern checkcode here
 			checkForMatch();
+			//BING BONG
 			generateNewMoveable();
 		}
 	}
