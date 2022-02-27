@@ -170,9 +170,6 @@ public class App extends PApplet {
 
 	private void checkForMatch(){
 		
-
-		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchBottom(moveablePiece.getLeftHalf()).size());
-
 		if(matchBottom(moveablePiece.getLeftHalf()).size()>3){
 			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
@@ -185,12 +182,29 @@ public class App extends PApplet {
 			}
 		}
 
-		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchLeft(moveablePiece.getLeftHalf()).size());
-		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchRight(moveablePiece.getLeftHalf()).size());
+		if(matchLeft(moveablePiece.getLeftHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
 
-		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchBottom(moveablePiece.getRightHalf()).size());
-		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchLeft(moveablePiece.getRightHalf()).size());
-		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchRight(moveablePiece.getRightHalf()).size());
+		if(matchLeft(moveablePiece.getRightHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getRightHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchRight(moveablePiece.getLeftHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+				allBlocks.remove(b);
+			}
+		}
+
+		if(matchRight(moveablePiece.getRightHalf()).size()>3){
+			for(Block b : matchBottom(moveablePiece.getRightHalf())){
+				allBlocks.remove(b);
+			}
+		}
 
 		
 	}
@@ -206,7 +220,6 @@ public class App extends PApplet {
 					
 					if(toBeRemoved.contains(b) == false){
 						toBeRemoved.addAll(matchBottom(b));
-						
 					}
 				}
 			}
@@ -222,7 +235,9 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() + App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
-					toBeRemoved.addAll(matchRight(b));
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchRight(b));
+					}
 				}
 			}
 		}
@@ -237,7 +252,9 @@ public class App extends PApplet {
 		for(Block b : allBlocks){
 			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() - App.GRIDSPACE){
 				if(node.getColour() == b.getColour()){
-					toBeRemoved.addAll(matchLeft(b));
+					if(toBeRemoved.contains(b) == false){
+						toBeRemoved.addAll(matchLeft(b));
+					}
 				}
 			}
 		}
