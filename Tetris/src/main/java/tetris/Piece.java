@@ -135,6 +135,10 @@ public class Piece extends GameObject{
     }
 
     public boolean checkVirusUnder(ArrayList<Block> allBlocks){
+		for(Block pillHalf : this.getBothHalves()){
+            if(pillHalf.getYCoord() + 32 == 576){ return true; }
+        }
+
         for(Block pillHalf : this.getBothHalves()){
             for(Block b : allBlocks){
                 if(b.getXCoord() == pillHalf.getXCoord() && b.getYCoord() == pillHalf.getYCoord() + 32){ return true; }
