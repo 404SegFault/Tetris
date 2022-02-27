@@ -172,16 +172,14 @@ public class App extends PApplet {
 
 		//Checking bottom
 
-		for(Block b : matchBottom(moveablePiece.getLeftHalf())){
-			System.out.printf("%d %d\n",b.getXCoord(),b.getYCoord());
-		}
-
-
-		for(Block b : matchBottom(moveablePiece.getRightHalf())){
-			System.out.printf("%d %d\n",b.getXCoord(),b.getYCoord());
-		}
 		
-		// System.out.printf("%s : %d\n",moveablePiece.getRightHalf().getColour(),matchBottom(moveablePiece.getRightHalf()).size());
+		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchBottom(moveablePiece.getLeftHalf()).size());
+		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchLeft(moveablePiece.getLeftHalf()).size());
+		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getLeftHalf().getColour(),matchRight(moveablePiece.getLeftHalf()).size());
+
+		System.out.printf("Bottom Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchBottom(moveablePiece.getRightHalf()).size());
+		System.out.printf("Left Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchLeft(moveablePiece.getRightHalf()).size());
+		System.out.printf("Right Match -- %s : %d\n",moveablePiece.getRightHalf().getColour(),matchRight(moveablePiece.getRightHalf()).size());
 
 	}
 
@@ -199,7 +197,38 @@ public class App extends PApplet {
 		}
 		return toBeRemoved;
 	}	
-	
+
+	private List<Block> matchRight(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() + App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					toBeRemoved.addAll(matchBottom(b));
+				}
+			}
+		}
+		return toBeRemoved;
+	}	
+
+	private List<Block> matchLeft(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getYCoord() == b.getYCoord() && node.getXCoord() == b.getXCoord() - App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					toBeRemoved.addAll(matchBottom(b));
+				}
+			}
+		}
+		return toBeRemoved;
+	}		
+
+
 	// private void checkForMatch(){
 	// 	int[] cursor = {LEFT, TOP};
 	// 	int adjacentBlocks = 0;
