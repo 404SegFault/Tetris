@@ -511,4 +511,28 @@ public class App extends PApplet {
 	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
 
 	public Piece getMoveablePiece(){return this.moveablePiece;}
+
+	
 }
+
+
+/*
+		try {
+			// -------------------------LOADING THE MAIN MAP--------------------------
+			File f = new File(filepath);
+			Scanner sc = new Scanner(f);
+		
+			int rowIndex = 0;
+			// scans the entire map
+			while (sc.hasNext()){
+				String row =  sc.nextLine();
+				char[] rowInCharacters = row.toCharArray(); 
+				// sets the row to the characters
+				map[rowIndex] = rowInCharacters;
+				rowIndex ++;
+			}
+		}
+		catch (FileNotFoundException e) { 
+ 			e.printStackTrace();
+		}
+*/
