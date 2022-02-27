@@ -74,7 +74,7 @@ public class App extends PApplet {
 		
 		Timer timer = new Timer();
 
-		loadLevel("level1.txt");
+		loadLevel();
 
 		// this.virus = new Block(allSprites.get("Green_virus"), 320, 64, "Green");
 		// this.allBlocks.add(virus);
@@ -84,7 +84,6 @@ public class App extends PApplet {
 		//this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		//this.allBlocks.add(block);
-		generateRandomLevel();
 
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
@@ -259,7 +258,7 @@ public class App extends PApplet {
 		this.text("YOU WIN", WIDTH/2 - App.GRIDSPACE * 3 + 16, HEIGHT/2);
 	}
 
-	public void loadLevel(String filepath){
+	public void loadLevel(){
 		//App.GRIDSPACE * 2 offset from where the game map actually starts
 
 		/*
@@ -269,28 +268,9 @@ public class App extends PApplet {
 		each index gets a randomly allocated ting
 		*/
 
+		char[][] map = generateRandomLevel();
 
-		char[][] map = new char[HEIGHT][WIDTH];
-		try {
-			// -------------------------LOADING THE MAIN MAP--------------------------
-			File f = new File(filepath);
-			Scanner sc = new Scanner(f);
-		
-			int rowIndex = 0;
-			// scans the entire map
-			while (sc.hasNext()){
-				String row =  sc.nextLine();
-				char[] rowInCharacters = row.toCharArray(); 
-				// sets the row to the characters
-				map[rowIndex] = rowInCharacters;
-				rowIndex ++;
-			}
-		}
-		catch (FileNotFoundException e) { 
- 			e.printStackTrace();
-		}
-
-		int cursorX = LEFT;
+		int cursorX = LEFT + App.GRIDSPACE;
 		int cursorY = TOP;
 
 		//--------------------------------LOADING THE SPRITES FROM THE MAP------------------------------------
@@ -317,7 +297,7 @@ public class App extends PApplet {
 				cursorX += App.GRIDSPACE;
 			}
 			// resets the spawining thing to the left again and moves down the cursor
-			cursorX = LEFT;
+			cursorX = LEFT + App.GRIDSPACE;
 			cursorY += App.GRIDSPACE;
 		}
 	}
@@ -336,7 +316,7 @@ public class App extends PApplet {
 			System.out.println(Arrays.toString(row));
 		}
 
-		char[] symbols = new char[]{' ', ' ', ' ', 'R', 'G', 'B'}; 
+		char[] symbols = new char[]{' ', ' ', ' ', ' ', 'R', 'G', 'B'}; 
 
 		for (int i = GRIDHEIGHT/2; i < GRIDHEIGHT; i++){
 			
@@ -344,7 +324,7 @@ public class App extends PApplet {
 
 			for (int j = 0; j < GRIDWIDTH; j++){
 				Random rand = new Random();
-				row[j] = symbols[rand.nextInt(6)];
+				row[j] = symbols[rand.nextInt(7)];
 			}
 
 			System.out.println(Arrays.toString(row));
@@ -366,3 +346,24 @@ public class App extends PApplet {
 	
 }
 
+
+/*
+		try {
+			// -------------------------LOADING THE MAIN MAP--------------------------
+			File f = new File(filepath);
+			Scanner sc = new Scanner(f);
+		
+			int rowIndex = 0;
+			// scans the entire map
+			while (sc.hasNext()){
+				String row =  sc.nextLine();
+				char[] rowInCharacters = row.toCharArray(); 
+				// sets the row to the characters
+				map[rowIndex] = rowInCharacters;
+				rowIndex ++;
+			}
+		}
+		catch (FileNotFoundException e) { 
+ 			e.printStackTrace();
+		}
+*/
