@@ -26,6 +26,8 @@ public class App extends PApplet {
 	public static final int RIGHT = 448;
 	public static final int BOTTOM = 544;
 
+	private int points = 0;
+
 	private PFont font;
 	private HashMap<String, PImage> allSprites = new HashMap<String, PImage>();
 	private ArrayList<GameObject> allObjects;
@@ -98,8 +100,12 @@ public class App extends PApplet {
 	
 	/////////////////////////METHODS USED WHEN RUNNING THE GAME////////////////////
 	public void drawUI(){
-		background(112, 123, 138);
+		// background(112, 123, 138);
+		this.background(loadImage("Tiles/checkerboard.png"));
+
+		this.text("POINTS: " + this.points, WIDTH/2 - GRIDSPACE * 3, GRIDSPACE + 12);
 	}
+
 	// method to check if blocks are stacked on each other (on top)
 	public void hardDrop(){
 
@@ -178,40 +184,47 @@ public class App extends PApplet {
 
 
 	private void checkForMatch(){
+
 		
 		if(matchBottom(moveablePiece.getLeftHalf()).size()>3){
 			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
 		if(matchBottom(moveablePiece.getRightHalf()).size()>3){
 			for(Block b : matchBottom(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
 		if(matchLeft(moveablePiece.getLeftHalf()).size()>3){
 			for(Block b : matchLeft(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
 		if(matchLeft(moveablePiece.getRightHalf()).size()>3){
 			for(Block b : matchLeft(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
 		if(matchRight(moveablePiece.getLeftHalf()).size()>3){
 			for(Block b : matchRight(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
 		if(matchRight(moveablePiece.getRightHalf()).size()>3){
 			for(Block b : matchRight(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
+				points += 100;
 			}
 		}
 
@@ -339,7 +352,8 @@ public class App extends PApplet {
 	/** Goes through all the objects and draws them **/
     public void draw() {
 		this.tick();
-		this.background(loadImage("Tiles/checkerboard.png"));
+		this.drawUI();
+
 		moveablePiece.draw(this);
 
 		for (int i = 0; i < this.allBlocks.size(); i++){
