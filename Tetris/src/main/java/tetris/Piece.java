@@ -17,42 +17,16 @@ public class Piece extends GameObject{
 
     private int topX,topY,bottomX, bottomY;
     private int pieceDir;
-
-    // private String direction[4] = {"Right", "Down","Left","Up"};
-
-
-    /*
-    red green
-    
-    object fullPill (sprite , x ,y , red , green){
-        constructor
-
-        super(sprite, x, y);
-
-        halfPill half1 = new halfPill(sprite, x, y, color1);
-        halfPill half2 = new halfPill(sprite, x, y, color2);
-
-
-
-    };
-
-    fullPill.rotation( dorotate , ccwRotation);
-    movement();
-
-
-    */
     
     public Piece(HashMap<String,PImage> allSprites, PImage sprite, int x, int y, String colour1, String colour2){
 
-        super(sprite,x,y);
+        super(sprite,x,y, "pill");
 
-        this.leftHalf = new Block(allSprites.get(colour1), x-App.GRIDSPACE, y, colour1);
+        this.leftHalf = new Block(allSprites.get(colour1), x-App.GRIDSPACE, y, colour1, "pill");
         this.leftHalf.setDegrees(180);
-        this.rightHalf = new Block(allSprites.get(colour2), x, y, colour2);
+        this.rightHalf = new Block(allSprites.get(colour2), x, y, colour2, "pill");
 
         pieceDir = 0;
-
-        //topLeftCorner = [min(block1X, block2X), min()
 
     }
     
@@ -63,16 +37,6 @@ public class Piece extends GameObject{
     }
 
     public void pieceCWRotation(){
-        // if(Math.min(rightHalf.getXCoord(),leftHalf.getXCoord()) + App.GRIDSPACE <= 608 && pieceDir != 3){
-        //     if(Math.max(rightHalf.getXCoord(),leftHalf.getXCoord()) - App.GRIDSPACE >= 0 && pieceDir != 1){
-        //         this.rightHalf.blockCWRotation();
-        //         this.leftHalf.doRotate(1);
-        //         pieceDir  = (pieceDir + 1) %4;
-        //     }
-        // }else if(){
-            
-        // }
-
         System.out.printf("Old: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
 
         boolean validTurn = this.leftHalf.blockCWRotation();
@@ -82,13 +46,6 @@ public class Piece extends GameObject{
     }
 
     public void pieceCCWRotation(){
-        // if(Math.min(rightHalf.getXCoord(),leftHalf.getXCoord()) + App.GRIDSPACE <= 608 && pieceDir != 1){
-        //     if(Math.max(rightHalf.getXCoord(),leftHalf.getXCoord()) - App.GRIDSPACE >= 0 && pieceDir != 3){
-        //         
-        //         pieceDir  = (pieceDir + 1) %4;
-
-        //     }
-        // }
 
         System.out.printf("Old: %d , %d \n", rightHalf.getRotDegrees(), leftHalf.getRotDegrees());
 
@@ -135,6 +92,10 @@ public class Piece extends GameObject{
     }
 
     public boolean checkVirusUnder(ArrayList<Block> allBlocks){
+        for(Block pillHalf : this.getBothHalves()){
+            if(pillHalf.getYCoord() + 32 == 576){ return true; }
+        }
+
         for(Block pillHalf : this.getBothHalves()){
             for(Block b : allBlocks){
                 if(b.getXCoord() == pillHalf.getXCoord() && b.getYCoord() == pillHalf.getYCoord() + 32){ return true; }
