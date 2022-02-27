@@ -7,7 +7,5 @@
 - Daniel
 - Rubaina
 =======
-# Tetris
-### Collaborators:
-- Hruday
+
 >>>>>>> borderbranch
