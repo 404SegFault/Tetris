@@ -84,6 +84,7 @@ public class App extends PApplet {
 		//this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		//this.allBlocks.add(block);
+		generateRandomLevel();
 
 		this.font = createFont("PressStart2P-Regular.ttf", 20);
 		this.textFont(this.font);
@@ -321,6 +322,37 @@ public class App extends PApplet {
 		}
 	}
 
+	public char[][] generateRandomLevel(){
+		char[][] newMap = new char[GRIDHEIGHT][GRIDWIDTH];  
+		// move down 8 spaced before generating virsuses
+		for (int i = 0; i < GRIDHEIGHT / 2; i ++){
+			char[] row = newMap[i];
+
+			// makes all of them empty
+			for (int j = 0; j < GRIDWIDTH; j++){
+				row[j] = ' ';
+			}
+
+			System.out.println(Arrays.toString(row));
+		}
+
+		char[] symbols = new char[]{' ', ' ', ' ', 'R', 'G', 'B'}; 
+
+		for (int i = GRIDHEIGHT/2; i < GRIDHEIGHT; i++){
+			
+			char[] row = newMap[i];
+
+			for (int j = 0; j < GRIDWIDTH; j++){
+				Random rand = new Random();
+				row[j] = symbols[rand.nextInt(6)];
+			}
+
+			System.out.println(Arrays.toString(row));
+		}
+
+		return newMap;
+	}
+
 	/////////////////////////////GETTERS AND SETTERS//////////////////////////////////
 
     public static void main(String[] args) {
@@ -330,5 +362,7 @@ public class App extends PApplet {
 	public ArrayList<Block> getAllBlocks(){return this.allBlocks;}
 
 	public Piece getMoveablePiece(){return this.moveablePiece;}
+
+	
 }
 
