@@ -35,7 +35,7 @@ public class App extends PApplet {
 
 	private ArrayList<Block> allBlocks = new ArrayList<>();
 	private DropTimer dropTimer;
-	private int dropMilliseconds = 2000;
+	private int dropMilliseconds = 750;
 
 	//private String[] colours = new String[]{"DarkBlue","Green","LightBlue","Orange","Purple","Red","Yellow"};
 	private String[] colours = new String[]{"Blue","Green","Red"};
