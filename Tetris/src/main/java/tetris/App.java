@@ -81,6 +81,7 @@ public class App extends PApplet {
 
 		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, "Blue", "Green");
 		this.moveablePiece = newPiece;
+		generateNewMoveable();
 		//this.piece = new Piece(allSprites, allSprites.get("Red_Red"),320, 320, "Red", "Red");
 
 		//this.allBlocks.add(block);
@@ -161,7 +162,78 @@ public class App extends PApplet {
 		if (moveablePiece.checkVirusUnder(allBlocks) == true){
 			hardDrop();
 			//Insert pattern checkcode here
+			checkForMatch();
 		}
+	}
+
+	private void checkForMatch(){
+		int[] cursor = {LEFT, TOP};
+		int adjacentBlocks = 0;
+
+		ArrayList<int[]> coordsToRemove = new ArrayList<int[]>();
+
+		// while the y cursor is still not at the bottom
+		while (cursor[1] < BOTTOM){
+
+			// the x cursor goes as much right as possible before hitting the border
+			while (cursor[0] <= RIGHT) {
+				
+				// needs to check the row it is currently on by giving the Y 
+				// FIXME POTENTIAL BUG BECAUSE IT MIGHT PASS A REFERECE TO IT AND FUCK UP THE POSITIONING INSIDE THE FUNCTION? 
+				int finalXPosition = runsTo(cursor);
+				
+				adjacentBlocks = (finalXPosition - adjacentBlocks + 1) % App.GRIDSPACE;
+
+				if (adjacentBlocks >= 4){
+					for (int i = 0 ; i < adjacentBlocks; i++){
+						coordsToRemove.add(cursor);
+					}
+				}
+
+
+			}
+		
+			cursor[0] = LEFT;
+			cursor[1] += App.GRIDSPACE;
+		}
+
+		for (int[] coord : coordsToRemove){
+			System.out.println(findBlock(coord).toString());
+			// FIXME there can probably 2 coordinates and it would try to remove something that doesnt exist 
+			allBlocks.remove(findBlock(coord));
+		}
+	} 
+
+	private int runsTo(int[] cursor) {
+		// FIXME NEED TO CHECK IF THIS POINTS TO THE VALUE INSIDE THE CURSOR OR IS A NEW VALUE ?
+		// int xPosition = cursor[0];
+
+		while (cursor[0] < RIGHT) {
+
+			Block currentBlock = findBlock(cursor);
+			Block blockToTheRight = findBlock(new int[]{cursor[0] + 32, cursor[1]});
+			
+			// finds the block it is currently on and matches the colour
+			if (currentBlock.sameColourAs(blockToTheRight) == false) {
+				return cursor[0];
+			}
+
+			cursor[0] += App.GRIDSPACE;
+		}
+
+		// if you cant find it then return the end of the screen
+		return cursor[0];
+	}
+
+	private Block findBlock(int[] coords){
+		// updates this object with the newest one
+		for (Block block : allBlocks){
+			if (Arrays.equals(block.getCoords(), coords)){
+				return block;
+			}
+		}
+
+		return null;
 	}
 
 	private void generateNewMoveable(){
@@ -172,13 +244,22 @@ public class App extends PApplet {
 		pieceLeftHalf.setBlock(); 
 		pieceRightHalf.setBlock();
 		
+		//
+
 		// randomly chooses a colour
 		Random rand = new Random();
 		String colour1 = colours[rand.nextInt(3)];
 		String colour2 = colours[rand.nextInt(3)];
 
 		// gets a new block based on the colour
-		Piece newPiece = new Piece(allSprites, allSprites.get("Blue_Green"), 320, 64, colour1, colour2);
+
+		String nextColour = colour1 + "_" + colour2;
+		
+		if(allSprites.get(nextColour) == null){
+			nextColour = colour2 + "_"+ colour1;
+		}
+		
+		Piece newPiece = new Piece(allSprites, allSprites.get(nextColour), 320, 64, colour1, colour2);
 		moveablePiece = newPiece;
 		
 	}
@@ -217,6 +298,11 @@ public class App extends PApplet {
 				moveablePiece.pieceDownMove();
 				break;
 			
+			case PApplet.UP:
+				System.out.println("clockwise");	
+					moveablePiece.pieceCWRotation();
+					break;
+
 			case 88: //x for Clockwise	
 				System.out.println("clockwise");	
 				moveablePiece.pieceCWRotation();
@@ -331,4 +417,3 @@ public class App extends PApplet {
 
 	public Piece getMoveablePiece(){return this.moveablePiece;}
 }
-
