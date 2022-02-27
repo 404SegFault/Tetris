@@ -137,6 +137,7 @@ public class App extends PApplet {
 		}
 
 		generateNewMoveable();
+		
 	}
 
 	public boolean blockStacked(){
@@ -158,10 +159,16 @@ public class App extends PApplet {
 	public void tick(){
 		this.frameCount++;
 
-		if (moveablePiece.checkVirusUnder(allBlocks) == true){
-			hardDrop();
-			//Insert pattern checkcode here
+		if(!GameOver()){
+			if (moveablePiece.checkVirusUnder(allBlocks) == true){
+				hardDrop();
+				//Insert pattern checkcode here
+			}
+		}else{
+			displayGameOver();
 		}
+
+		
 	}
 
 	private void generateNewMoveable(){
@@ -251,6 +258,7 @@ public class App extends PApplet {
 	public void displayGameOver(){
 		background(112, 123, 138);
 		this.text("GAME OVER", WIDTH/2 - App.GRIDSPACE * 4 + 16, HEIGHT/2);
+		System.out.println("GAME OVERR!");
 	}
 
 	public void displayYouWin(){
@@ -332,6 +340,16 @@ public class App extends PApplet {
 
 		return newMap;
 	}
+
+	public boolean GameOver(){ // not all blocks but the moveable piece
+		for(Block b: allBlocks){
+			if (Arrays.equals(b.getCoords(), moveablePiece.getLeftHalf().getCoords()) ||  Arrays.equals(b.getCoords(), moveablePiece.getRightHalf().getCoords())){
+				return true;
+			}
+
+			} return false;
+		}
+	
 
 	/////////////////////////////GETTERS AND SETTERS//////////////////////////////////
 

@@ -1,14 +1,10 @@
-tetris/GameObject.java
- tetris.GameObject
-tetris/App.java
- tetris.App
-tetris/GameManager.java
- tetris.GameManager
-tetris/timers/DropTimer.java
- tetris.DropTimer
-tetris/Colours.java
- tetris.Colours
-tetris/Piece.java
- tetris.Piece
-tetris/Block.java
+main/java/tetris/Block.java
  tetris.Block
+main/java/tetris/Piece.java
+ tetris.Piece
+main/java/tetris/DropTimer.java
+ tetris.DropTimer
+main/java/tetris/GameObject.java
+ tetris.GameObject
+main/java/tetris/App.java
+ tetris.App
