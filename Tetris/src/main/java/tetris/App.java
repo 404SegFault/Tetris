@@ -137,7 +137,7 @@ public class App extends PApplet {
 			allBlocks.add(pillHalf);
 		}
 
-		generateNewMoveable();
+		setPiece();
 	}
 
 	public boolean blockStacked(){
@@ -163,46 +163,80 @@ public class App extends PApplet {
 			hardDrop();
 			//Insert pattern checkcode here
 			checkForMatch();
+			generateNewMoveable();
 		}
 	}
 
+
 	private void checkForMatch(){
-		int[] cursor = {LEFT, TOP};
-		int adjacentBlocks = 0;
 
-		ArrayList<int[]> coordsToRemove = new ArrayList<int[]>();
+		//Checking bottom
 
-		// while the y cursor is still not at the bottom
-		while (cursor[1] < BOTTOM){
-
-			// the x cursor goes as much right as possible before hitting the border
-			while (cursor[0] <= RIGHT) {
-				
-				// needs to check the row it is currently on by giving the Y 
-				// FIXME POTENTIAL BUG BECAUSE IT MIGHT PASS A REFERECE TO IT AND FUCK UP THE POSITIONING INSIDE THE FUNCTION? 
-				int finalXPosition = runsTo(cursor);
-				
-				adjacentBlocks = (finalXPosition - adjacentBlocks + 1) % App.GRIDSPACE;
-
-				if (adjacentBlocks >= 4){
-					for (int i = 0 ; i < adjacentBlocks; i++){
-						coordsToRemove.add(cursor);
-					}
-				}
+		for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+			System.out.printf("%d %d\n",b.getXCoord(),b.getYCoord());
+		}
 
 
-			}
+		for(Block b : matchBottom(moveablePiece.getRightHalf())){
+			System.out.printf("%d %d\n",b.getXCoord(),b.getYCoord());
+		}
 		
-			cursor[0] = LEFT;
-			cursor[1] += App.GRIDSPACE;
-		}
+		// System.out.printf("%s : %d\n",moveablePiece.getRightHalf().getColour(),matchBottom(moveablePiece.getRightHalf()).size());
 
-		for (int[] coord : coordsToRemove){
-			System.out.println(findBlock(coord).toString());
-			// FIXME there can probably 2 coordinates and it would try to remove something that doesnt exist 
-			allBlocks.remove(findBlock(coord));
+	}
+
+	private List<Block> matchBottom(Block node){
+
+		List<Block> toBeRemoved = new ArrayList<Block>();
+		toBeRemoved.add(node);
+
+		for(Block b : allBlocks){
+			if(node.getXCoord() == b.getXCoord() && node.getYCoord() == b.getYCoord() - App.GRIDSPACE){
+				if(node.getColour() == b.getColour()){
+					toBeRemoved.addAll(matchBottom(b));
+				}
+			}
 		}
-	} 
+		return toBeRemoved;
+	}	
+	
+	// private void checkForMatch(){
+	// 	int[] cursor = {LEFT, TOP};
+	// 	int adjacentBlocks = 0;
+
+	// 	ArrayList<int[]> coordsToRemove = new ArrayList<int[]>();
+
+	// 	// while the y cursor is still not at the bottom
+	// 	while (cursor[1] < BOTTOM){
+
+	// 		// the x cursor goes as much right as possible before hitting the border
+	// 		while (cursor[0] <= RIGHT) {
+				
+	// 			// needs to check the row it is currently on by giving the Y 
+	// 			// FIXME POTENTIAL BUG BECAUSE IT MIGHT PASS A REFERECE TO IT AND FUCK UP THE POSITIONING INSIDE THE FUNCTION? 
+	// 			int finalXPosition = runsTo(cursor);
+				
+	// 			adjacentBlocks = (finalXPosition - adjacentBlocks + 1) % App.GRIDSPACE;
+
+	// 			if (adjacentBlocks >= 4){
+	// 				for (int i = 0 ; i < adjacentBlocks; i++){
+	// 					coordsToRemove.add(cursor);
+	// 				}
+	// 			}
+
+
+	// 		}
+		
+	// 		cursor[0] = LEFT;
+	// 		cursor[1] += App.GRIDSPACE;
+	// 	}
+
+	// 	for (int[] coord : coordsToRemove){
+	// 		System.out.println(findBlock(coord).toString());
+	// 		// FIXME there can probably 2 coordinates and it would try to remove something that doesnt exist 
+	// 		allBlocks.remove(findBlock(coord));
+	// 	}
+	// } 
 
 	private int runsTo(int[] cursor) {
 		// FIXME NEED TO CHECK IF THIS POINTS TO THE VALUE INSIDE THE CURSOR OR IS A NEW VALUE ?
@@ -236,13 +270,17 @@ public class App extends PApplet {
 		return null;
 	}
 
-	private void generateNewMoveable(){
+
+	private void setPiece(){
 		//sets the current block
 		Block pieceLeftHalf = moveablePiece.getLeftHalf();
 		Block pieceRightHalf = moveablePiece.getRightHalf();
 
 		pieceLeftHalf.setBlock(); 
 		pieceRightHalf.setBlock();
+	}
+
+	private void generateNewMoveable(){
 		
 		//
 
