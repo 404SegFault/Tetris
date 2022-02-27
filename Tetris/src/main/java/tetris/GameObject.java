@@ -28,9 +28,14 @@ public abstract class GameObject {
 	public int getXCoord(){return this.coords[0];}
 	public int getYCoord(){return this.coords[1];}
 		
-
 	
 	////////////////////////////////////////////SETTERS/////////////////////////////////////////
+	public boolean compareCoords(int x, int y){
+		int[] newCoords = new int[]{x,y};
+
+		return Arrays.equals(this.coords, newCoords);
+	}
+	
 	public void removeObject() {this.beRemoved = true;}
 	public void setCoord(int x, int y) {
 		this.coords[0] = x;
