@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Tetris
 ### Collaborators:
 - Hruday
@@ -9,4 +9,4 @@
 
 =======
 
->>>>>>> borderbranch
+
