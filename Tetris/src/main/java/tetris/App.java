@@ -192,13 +192,19 @@ public class App extends PApplet {
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
-		this.tick();
-		this.background(loadImage("Tiles/checkerboard.png"));
-		moveablePiece.draw(this);
-
-		for (int i = 0; i < this.allBlocks.size(); i++){
-			allBlocks.get(i).draw(this);
+		if(!GameOver()){
+			this.tick();
+			this.background(loadImage("Tiles/checkerboard.png"));
+			moveablePiece.draw(this);
+	
+			for (int i = 0; i < this.allBlocks.size(); i++){
+				allBlocks.get(i).draw(this);
+			}
 		}
+		else{
+			displayGameOver();
+		}
+	
 
 
 		// this.piece.draw(this);
@@ -256,9 +262,11 @@ public class App extends PApplet {
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
 	public void displayGameOver(){
-		background(112, 123, 138);
-		this.text("GAME OVER", WIDTH/2 - App.GRIDSPACE * 4 + 16, HEIGHT/2);
-		System.out.println("GAME OVERR!");
+		this.background(0);
+		fill(255);
+		textFont(font, 32);
+		text("GAME OVER", WIDTH/2 - 5 * App.GRIDSPACE +16, HEIGHT/2);
+		
 	}
 
 	public void displayYouWin(){
