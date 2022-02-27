@@ -183,25 +183,25 @@ public class App extends PApplet {
 		}
 
 		if(matchLeft(moveablePiece.getLeftHalf()).size()>3){
-			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+			for(Block b : matchLeft(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
 			}
 		}
 
 		if(matchLeft(moveablePiece.getRightHalf()).size()>3){
-			for(Block b : matchBottom(moveablePiece.getRightHalf())){
+			for(Block b : matchLeft(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
 			}
 		}
 
 		if(matchRight(moveablePiece.getLeftHalf()).size()>3){
-			for(Block b : matchBottom(moveablePiece.getLeftHalf())){
+			for(Block b : matchRight(moveablePiece.getLeftHalf())){
 				allBlocks.remove(b);
 			}
 		}
 
 		if(matchRight(moveablePiece.getRightHalf()).size()>3){
-			for(Block b : matchBottom(moveablePiece.getRightHalf())){
+			for(Block b : matchRight(moveablePiece.getRightHalf())){
 				allBlocks.remove(b);
 			}
 		}
