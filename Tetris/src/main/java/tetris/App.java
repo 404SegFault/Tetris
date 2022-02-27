@@ -164,21 +164,14 @@ public class App extends PApplet {
 	/** Decrements the timer every second, moves enemies**/
 	public void tick(){
 		this.frameCount++;
-
-		// if(!GameOver()){
-		// 	if (moveablePiece.checkVirusUnder(allBlocks) == true){
-		// 		hardDrop();
-		// 		//Insert pattern checkcode here
-		// 	}
-		// }else{
-		// 	displayGameOver();
 		if (moveablePiece.checkVirusUnder(allBlocks) == true){
 			hardDrop();
 			//Insert pattern checkcode here
 			checkForMatch();
 			generateNewMoveable();
-		}
 
+		}
+		
 		
 	}
 
@@ -351,15 +344,17 @@ public class App extends PApplet {
 
 	/** Goes through all the objects and draws them **/
     public void draw() {
-		this.tick();
-		this.drawUI();
 
-		moveablePiece.draw(this);
-
-		for (int i = 0; i < this.allBlocks.size(); i++){
-			allBlocks.get(i).draw(this);
+		if(!gameOver()){
+			this.tick();
+			this.drawUI();
+			moveablePiece.draw(this);
+			for (int i = 0; i < this.allBlocks.size(); i++){
+				allBlocks.get(i).draw(this);
+			}
+		}else{
+			displayGameOver();
 		}
-
 
 		// this.piece.draw(this);
 		//---------------------DRAWING THE OBJECTS------------------------
@@ -421,9 +416,10 @@ public class App extends PApplet {
 
 	/////////////////////////////////GAME SCREENS//////////////////////////////////////
 	public void displayGameOver(){
-		background(112, 123, 138);
+		this.background(0);
+		fill(255);
+		textFont(font,32);
 		this.text("GAME OVER", WIDTH/2 - App.GRIDSPACE * 4 + 16, HEIGHT/2);
-		System.out.println("GAME OVERR!");
 	}
 
 	public void displayYouWin(){
@@ -506,15 +502,19 @@ public class App extends PApplet {
 		return newMap;
 	}
 
-	public boolean GameOver(){ // not all blocks but the moveable piece
+	public boolean gameOver(){ // not all blocks but the moveable piece
 		for(Block b: allBlocks){
-			if (Arrays.equals(b.getCoords(), moveablePiece.getLeftHalf().getCoords()) ||  Arrays.equals(b.getCoords(), moveablePiece.getRightHalf().getCoords())){
+			if(b.getYCoord() == 64){
 				return true;
 			}
+			// if (Arrays.equals(b.getCoords(), moveablePiece.getLeftHalf().getCoords()) ||  Arrays.equals(b.getCoords(), moveablePiece.getRightHalf().getCoords())){
+			// 	return true;
+			// }
 
-			} return false;
+			// } return false;
 		}
-	
+		return false;
+	}
 
 	/////////////////////////////GETTERS AND SETTERS//////////////////////////////////
 
